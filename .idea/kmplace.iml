@@ -19,6 +19,11 @@
       <excludeFolder url="file://$MODULE_DIR$/client/build" />
       <excludeFolder url="file://$MODULE_DIR$/client/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/server" />
+      <excludeFolder url="file://$MODULE_DIR$/client/android/app/src/main/java" />
+      <excludeFolder url="file://$MODULE_DIR$/client/android/app/src/debug" />
+      <excludeFolder url="file://$MODULE_DIR$/client/android/.gradle" />
+      <excludeFolder url="file://$MODULE_DIR$/client/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/.vs" />
     </content>
     <orderEntry type="jdk" jdkName="Android API 30 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -2,28 +2,33 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart';
-
-void main() {
-  runApp(
-    HomeApp(),
-  );
-}
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeApp extends StatelessWidget {
+  const HomeApp({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('en', ''), // English, no country code
+        Locale('fr', ''), // French, no country code
+      ],
       home: SocketObject(),
     );
   }
 }
 
 class SocketObject extends StatefulWidget {
-  SocketObject() : super();
-
-  final String title = "KM Place";
-
+  const SocketObject({Key key}) : super(key: key);
   @override
   SocketObjectState createState() => SocketObjectState();
 }
@@ -31,7 +36,7 @@ class SocketObject extends StatefulWidget {
 class SocketObjectState extends State<SocketObject> with WidgetsBindingObserver {
   String _status;
   SocketUtil _socketUtil;
-  List<String> _messages;
+  List _messages;
   TextEditingController _textEditingController;
   int userSelected = 1;
 
@@ -40,7 +45,7 @@ class SocketObjectState extends State<SocketObject> with WidgetsBindingObserver 
     super.initState();
     _textEditingController = TextEditingController();
     _status = "";
-    _messages = <String>[];
+    _messages = [];
     _socketUtil = SocketUtil();
     _socketUtil.initSocket(connectListener, messageListener);
   }
@@ -58,7 +63,7 @@ class SocketObjectState extends State<SocketObject> with WidgetsBindingObserver 
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(AppLocalizations.of(context).appTitle),
       ),
       body: Container(
         padding: EdgeInsets.all(20.0),
@@ -77,11 +82,11 @@ class SocketObjectState extends State<SocketObject> with WidgetsBindingObserver 
                 filled: true,
                 fillColor: Colors.white60,
                 contentPadding: EdgeInsets.all(15.0),
-                hintText: 'Enter message',
+                hintText: AppLocalizations.of(context).enterMessage,
               ),
             ),
             OutlinedButton(
-              child: Text("Send Message"),
+              child: Text(AppLocalizations.of(context).sendMessage),
               onPressed: () {
                 if (_textEditingController.text.isEmpty) {
                   return;
@@ -107,7 +112,7 @@ class SocketObjectState extends State<SocketObject> with WidgetsBindingObserver 
                 itemCount: null == _messages ? 0 : _messages.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Text(
-                    _messages[index],
+                    utf8.decode(_messages[index].cast<int>()),
                     style: TextStyle(
                       fontSize: 16.0,
                       color: Colors.black,
@@ -122,7 +127,7 @@ class SocketObjectState extends State<SocketObject> with WidgetsBindingObserver 
     );
   }
 
-  void messageListener(String message) {
+  void messageListener(List<dynamic> message) {
     print('Adding message');
     setState(() {
       _messages.add(message);
@@ -198,4 +203,10 @@ class SocketUtil {
     }
     return true;
   }
+}
+
+void main() {
+  runApp(
+    const HomeApp(),
+  );
 }

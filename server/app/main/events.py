@@ -38,7 +38,7 @@ def text(message):
     room = getRoom()
     user = getUser()
     msg = ''.join(chr(elt) for elt in message['msg'])
-    emit('message', {'user' : user, 'msg': msg}, room=room)
+    emit('message', {'user' : user, 'msg': message['msg']}, room=room)
 
 
 @socketio.on('left', namespace='/chat')
