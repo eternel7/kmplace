@@ -1,20 +1,11 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc_app_template/app.dart';
-import 'package:flutter_bloc_app_template/di/di.dart';
-import 'package:hydrated_bloc/hydrated_bloc.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:authentication_repository/authentication_repository.dart';
+import 'package:flutter/widgets.dart';
+import 'app.dart';
+import 'package:user_repository/user_repository.dart';
 
-Future<void> main(List<String> args) async {
-  WidgetsFlutterBinding.ensureInitialized();
-  configureDependencies();
-  final storage = await HydratedStorage.build(
-    storageDirectory: kIsWeb
-        ? HydratedStorage.webStorageDirectory
-        : await getTemporaryDirectory(),
-  );
-  HydratedBlocOverrides.runZoned(
-    () => runApp(const MyApp()),
-    storage: storage,
-  );
+void main() {
+  runApp(App(
+    authenticationRepository: AuthenticationRepository(),
+    userRepository: UserRepository(),
+  ));
 }

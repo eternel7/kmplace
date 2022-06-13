@@ -1,62 +1,97 @@
+import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bloc_app_template/generated/l10n.dart';
-import 'package:flutter_bloc_app_template/index.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '/authentication/authentication.dart';
+import '/home/home.dart';
+import '/login/login.dart';
+import '/splash/splash.dart';
+import 'package:user_repository/user_repository.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({
+class App extends StatelessWidget {
+  const App({
     Key? key,
+    required this.authenticationRepository,
+    required this.userRepository,
   }) : super(key: key);
+
+  final AuthenticationRepository authenticationRepository;
+  final UserRepository userRepository;
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => getIt.get<ThemeCubit>(),
+    return RepositoryProvider.value(
+      value: authenticationRepository,
+      child: BlocProvider(
+        create: (_) => AuthenticationBloc(
+          authenticationRepository: authenticationRepository,
+          userRepository: userRepository,
         ),
-        BlocProvider(
-          create: (context) => getIt.get<EmailListBloc>()
-            ..add(
-              EmailListFetched(),
-            ),
-        ),
-      ],
-      child: const _App(),
+        child: const AppView(),
+      ),
     );
   }
 }
 
-class _App extends StatelessWidget {
-  const _App({Key? key}) : super(key: key);
+class AppView extends StatefulWidget {
+  const AppView({Key? key}) : super(key: key);
+
+  @override
+  AppViewState createState() => AppViewState();
+}
+
+class AppViewState extends State<AppView> {
+  final _navigatorKey = GlobalKey<NavigatorState>();
+
+  NavigatorState get _navigator => _navigatorKey.currentState!;
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider(
-      create: (context) => null,
-      child: Builder(builder: (context) {
-        return MaterialApp(
-          restorationScopeId: 'app',
-          localizationsDelegates: const [
-            S.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: const [
-            Locale('en', ''), // English, no country code
-            Locale('de', ''), // German, no country code
-            Locale('fr', ''), // France, no country code
-          ],
-          onGenerateTitle: (BuildContext context) => S.of(context).appTitle,
-          theme: context.watch<ThemeCubit>().lightTheme,
-          darkTheme: context.watch<ThemeCubit>().darkTheme,
-          themeMode: context.watch<ThemeCubit>().themeMode,
-          onGenerateRoute: Routes.generateRoute,
-          onUnknownRoute: Routes.errorRoute,
+    return MaterialApp(
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        // 'en' is the language code. We could optionally provide a
+        // a country code as the second param, e.g.
+        // Locale('en', 'US'). If we do that, we may want to
+        // provide an additional app_en_US.arb file for
+        // region-specific translations.
+        Locale('en', ''),
+        Locale('fr', ''),
+      ],
+      theme: ThemeData(
+        primarySwatch: Colors.indigo,
+      ),
+      navigatorKey: _navigatorKey,
+      builder: (context, child) {
+        return BlocListener<AuthenticationBloc, AuthenticationState>(
+          listener: (context, state) {
+            switch (state.status) {
+              case AuthenticationStatus.authenticated:
+                _navigator.pushAndRemoveUntil<void>(
+                  HomePage.route(),
+                  (route) => false,
+                );
+                break;
+              case AuthenticationStatus.unauthenticated:
+                _navigator.pushAndRemoveUntil<void>(
+                  LoginPage.route(),
+                  (route) => false,
+                );
+                break;
+              default:
+                break;
+            }
+          },
+          child: child,
         );
-      }),
+      },
+      onGenerateRoute: (_) => SplashPage.route(),
     );
   }
 }

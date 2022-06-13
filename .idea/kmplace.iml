@@ -24,6 +24,15 @@
       <excludeFolder url="file://$MODULE_DIR$/client/android/.gradle" />
       <excludeFolder url="file://$MODULE_DIR$/client/.idea" />
       <excludeFolder url="file://$MODULE_DIR$/.vs" />
+      <excludeFolder url="file://$MODULE_DIR$/client/packages/authentification_repository/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/client/packages/authentification_repository/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/client/packages/authentification_repository/build" />
+      <excludeFolder url="file://$MODULE_DIR$/client/packages/user_repository/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/client/packages/user_repository/build" />
+      <excludeFolder url="file://$MODULE_DIR$/client/packages/user_repository/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/client/packages/authentication_repository/build" />
+      <excludeFolder url="file://$MODULE_DIR$/client/packages/authentication_repository/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/client/packages/authentication_repository/.dart_tool" />
     </content>
     <orderEntry type="jdk" jdkName="Android API 30 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

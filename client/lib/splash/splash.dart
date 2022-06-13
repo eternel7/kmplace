@@ -1,0 +1,1 @@
+export 'package:kmplace/splash/view/splash_page.dart';

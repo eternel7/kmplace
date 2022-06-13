@@ -1,41 +1,5 @@
 {
-  "@@locale": "en",
-  "appTitle": "KM Place",
-  "@appTitle": {
-    "description": "KM Place"
-  },
-  "itemsTitle": "Sample Items",
-  "@itemsTitle": {
-    "description": "The title of the sample items"
-  },
-  "messagesTitle": "Messages",
-  "@messagesTitle": {
-    "description": "The title of the messages screen"
-  },
-  "itemTitle": "Sample Item {id}",
-  "@itemTitle": {
-    "description": "The title of the item"
-  },
-  "settingsTitle": "Settings",
-  "@settingsTitle": {
-    "description": "The title of the settings"
-  },
-  "themeTitle": "Theme",
-  "@themeTitle": {},
-  "systemThemeTitle": "System Theme",
-  "@systemThemeTitle": {},
-  "lightThemeTitle": "Light Theme",
-  "@lightThemeTitle": {},
-  "darkThemeTitle": "Dark Theme",
-  "@darkThemeTitle": {},
-  "yellowThemeTitle": "Yellow Theme",
-  "@yellowThemeTitle": {},
-  "itemDetailsTitle": "Item Details",
-  "@itemDetailsTitle": {
-    "description": "The title of the Item Details screen"
-  },
-  "error": "Error",
-  "@error": {},
-  "emptyList": "Empty list",
-  "@emptyList": {}
+"homeTitle" : "KM Place",
+"loginTitle" : "Login",
+"logout" : "Logout"
 }
