@@ -12,7 +12,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var t = AppLocalizations.of(context);
+    final t = I10n.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(t.homeTitle)),
       body: Center(

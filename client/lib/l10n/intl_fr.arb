@@ -1,5 +1,14 @@
 {
 "homeTitle" : "KM Place",
 "loginTitle" : "Connexion",
+"authenticationFailure" : "Erreur d'authentification",
+"username" : "courriel",
+"invalidUsername" : "courriel invalide",
+"password" : "mot de passe",
+"invalidPassword" : "mot de passe invalide",
+"forgottenPassword" : "mot de passe oublié?",
+"loginButton" : "Connexion",
+"signUpButton" : "S'inscrire",
+"signUpTitle" : "Créer un compte",
 "logout" : "Déconnexion"
 }

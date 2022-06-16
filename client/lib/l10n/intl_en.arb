@@ -1,5 +1,17 @@
 {
 "homeTitle" : "KM Place",
 "loginTitle" : "Login",
+"authenticationFailure" : "Authentication Failure",
+"username" : "email",
+"invalidUsername" : "invalid email",
+"password" : "password",
+"invalidPassword" : "invalid password",
+"passwordRequireUpperAndLowercaseNumAnd8min" : "uppercase, lowercase, numeric and minimum 8 characters",
+"loginButton" : "Login",
+"forgottenPassword" : "mot de passe oublié?",
+"loginButton" : "Connexion",
+"noAccountYet" : "Does not have account?",
+"signUpButton" : "S'inscrire",
+"signUpTitle" : "Créer un compte",
 "logout" : "Logout"
 }

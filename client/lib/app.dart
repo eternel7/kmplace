@@ -50,7 +50,7 @@ class AppViewState extends State<AppView> {
   Widget build(BuildContext context) {
     return MaterialApp(
       localizationsDelegates: const [
-        AppLocalizations.delegate,
+        I10n.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
@@ -65,7 +65,11 @@ class AppViewState extends State<AppView> {
         Locale('fr', ''),
       ],
       theme: ThemeData(
-        primarySwatch: Colors.indigo,
+          colorSchemeSeed: Colors.indigo
+      ),
+      darkTheme: ThemeData(
+          colorSchemeSeed: Colors.indigo,
+          brightness: Brightness.dark
       ),
       navigatorKey: _navigatorKey,
       builder: (context, child) {

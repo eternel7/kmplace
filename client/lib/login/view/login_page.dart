@@ -13,7 +13,7 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var t = AppLocalizations.of(context);
+    final t = I10n.of(context);
 
     return Scaffold(
       appBar: AppBar(title: Text(t.loginTitle)),
@@ -25,9 +25,6 @@ class LoginPage extends StatelessWidget {
               child: SizedBox(
                   width: 200,
                   height: 150,
-                  /*decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(50.0)),*/
                   child: Image.asset('asset/images/logo_home.png')),
             ),
           ),

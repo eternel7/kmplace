@@ -1,6 +1,16 @@
 import 'package:formz/formz.dart';
 
-enum PasswordValidationError { empty }
+enum PasswordValidationError {
+  empty,
+  invalid,
+  requireUpperAndLowercaseNumAnd8min
+}
+
+bool validatePassword(String value) {
+  String pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$';
+  RegExp regExp = RegExp(pattern);
+  return regExp.hasMatch(value);
+}
 
 class Password extends FormzInput<String, PasswordValidationError> {
   const Password.pure() : super.pure('');
@@ -8,6 +18,11 @@ class Password extends FormzInput<String, PasswordValidationError> {
 
   @override
   PasswordValidationError? validator(String? value) {
-    return value?.isNotEmpty == true ? null : PasswordValidationError.empty;
+    if (value?.isNotEmpty != true) {
+      return PasswordValidationError.empty;
+    } else if (validatePassword(value!) == false) {
+      return PasswordValidationError.requireUpperAndLowercaseNumAnd8min;
+    }
+    return null;
   }
 }
