@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '/login/login.dart';
+import '/signup/signup.dart';
 import 'package:formz/formz.dart';
 
 class LoginForm extends StatelessWidget {
@@ -53,10 +54,11 @@ class LoginForm extends StatelessWidget {
                 Text(t.noAccountYet),
                 TextButton(
                   child: Text(
-                    t.signUpButton,
+                    t.goSignUpButton,
                     style: const TextStyle(fontSize: 20),
                   ),
                   onPressed: () {
+                    Navigator.push(context, SignupPage.route());
                     //signup screen
                   },
                 )

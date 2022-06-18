@@ -1,5 +1,6 @@
 {
 "homeTitle" : "KM Place",
+"slogan" : "Share and retain knowledge",
 "loginTitle" : "Login",
 "authenticationFailure" : "Authentication Failure",
 "username" : "email",
@@ -7,11 +8,15 @@
 "password" : "password",
 "invalidPassword" : "invalid password",
 "passwordRequireUpperAndLowercaseNumAnd8min" : "uppercase, lowercase, numeric and minimum 8 characters",
+"goLoginButton" : "Login",
 "loginButton" : "Login",
-"forgottenPassword" : "mot de passe oublié?",
-"loginButton" : "Connexion",
+"forgottenPassword" : "forgotten password?",
 "noAccountYet" : "Does not have account?",
-"signUpButton" : "S'inscrire",
-"signUpTitle" : "Créer un compte",
+"alreadyAnAccount" : "Does have an account?",
+"goSignUpButton" : "Sign Up",
+"signUpButton" : "Sign Up",
+"signUpTitle" : "Create an account",
+"confirmPassword" : "confirm password",
+"confirmPasswordInvalid" : "confirm password no identical to password",
 "logout" : "Logout"
 }
