@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '/login/login.dart';
 import '/signup/signup.dart';
+import '/forgottenpassword/forgottenpassword.dart';
 import 'package:formz/formz.dart';
 
 class LoginForm extends StatelessWidget {
@@ -11,7 +12,6 @@ class LoginForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = I10n.of(context);
-
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state.status.isSubmissionFailure) {
@@ -42,7 +42,8 @@ class LoginForm extends StatelessWidget {
                     style: const TextStyle(fontSize: 14),
                   ),
                   onPressed: () {
-                    //signup screen
+                    Navigator.push(context, ForgottenPasswordPage.route());
+                    //forgotten password screen
                   },
                 )
               ],
@@ -134,7 +135,7 @@ class _LoginButton extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(50)),
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 60, vertical: 20)),
+                        horizontal: 30, vertical: 10)),
                 onPressed: state.status.isValidated
                     ? () {
                         context.read<LoginBloc>().add(const LoginSubmitted());

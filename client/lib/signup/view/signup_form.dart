@@ -146,7 +146,7 @@ class _SignupButton extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(50)),
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 60, vertical: 20)),
+                        horizontal: 30, vertical: 10)),
                 onPressed: state.status.isValidated
                     ? () {
                         context.read<SignupBloc>().add(const SignupSubmitted());

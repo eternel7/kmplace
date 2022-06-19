@@ -2,14 +2,14 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '/login/login.dart';
+import '/forgottenpassword/forgottenpassword.dart';
 import '/banner/banner.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class ForgottenPasswordPage extends StatelessWidget {
+  const ForgottenPasswordPage({Key? key}) : super(key: key);
 
   static Route route() {
-    return MaterialPageRoute<void>(builder: (_) => const LoginPage());
+    return MaterialPageRoute<void>(builder: (_) => const ForgottenPasswordPage());
   }
 
   @override
@@ -17,7 +17,7 @@ class LoginPage extends StatelessWidget {
     final t = I10n.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text(t.loginTitle), automaticallyImplyLeading: false),
+      appBar: AppBar(title: Text(t.forgottenPasswordTitle)),
       body: SingleChildScrollView(
         child: Column(children: <Widget>[
           const BannerWidget(),
@@ -26,12 +26,12 @@ class LoginPage extends StatelessWidget {
             child: Center(
               child: BlocProvider(
                 create: (context) {
-                  return LoginBloc(
+                  return ForgottenPasswordBloc(
                     authenticationRepository:
                         RepositoryProvider.of<AuthenticationRepository>(context),
                   );
                 },
-                child: const LoginForm(),
+                child: const ForgottenPasswordForm(),
               ),
             ),
           ),

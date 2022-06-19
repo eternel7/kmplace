@@ -15,8 +15,10 @@
 "alreadyAnAccount" : "Does have an account?",
 "goSignUpButton" : "Sign Up",
 "signUpButton" : "Sign Up",
-"signUpTitle" : "Create an account",
+"signUpTitle" : "Account creation",
 "confirmPassword" : "confirm password",
-"confirmPasswordInvalid" : "confirm password no identical to password",
+"confirmPasswordInvalid" : "'confirm password' no identical to password",
+"forgottenPasswordTitle" : "Forgotten password",
+"forgottenPasswordButton" : "Send recover mail",
 "logout" : "Logout"
 }
