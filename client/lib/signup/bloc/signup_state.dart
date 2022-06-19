@@ -23,10 +23,10 @@ class SignupState extends Equatable {
       status: status ?? this.status,
       username: username ?? this.username,
       password: password ?? this.password,
-      confirmPassword: confirmPassword ?? this.confirmPassword,
+      confirmPassword: confirmPassword ?? this.confirmPassword
     );
   }
 
   @override
-  List<Object> get props => [status, username, password];
+  List<Object> get props => [status, username, password, confirmPassword];
 }

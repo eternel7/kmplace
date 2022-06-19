@@ -46,7 +46,32 @@ class AppViewState extends State<AppView> {
   final _navigatorKey = GlobalKey<NavigatorState>();
 
   NavigatorState get _navigator => _navigatorKey.currentState!;
-
+  TextTheme allTextTheme = TextTheme(
+    headline1:
+    GoogleFonts.trainOne(fontSize: 116, fontWeight: FontWeight.w300, letterSpacing: -1.5),
+    headline2:
+    GoogleFonts.trainOne(fontSize: 72, fontWeight: FontWeight.w300, letterSpacing: -0.5),
+    headline3: GoogleFonts.trainOne(fontSize: 58, fontWeight: FontWeight.w400),
+    headline4:
+    GoogleFonts.trainOne(fontSize: 41, fontWeight: FontWeight.w400, letterSpacing: 0.25),
+    headline5: GoogleFonts.roboto(fontSize: 29, fontWeight: FontWeight.w400),
+    headline6:
+    GoogleFonts.roboto(fontSize: 24, fontWeight: FontWeight.w500, letterSpacing: 0.15),
+    subtitle1:
+    GoogleFonts.lora(fontSize: 19, fontWeight: FontWeight.w400, letterSpacing: 0.15),
+    subtitle2:
+    GoogleFonts.lora(fontSize: 17, fontWeight: FontWeight.w500, letterSpacing: 0.1),
+    bodyText1:
+    GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w400, letterSpacing: 0.5),
+    bodyText2:
+    GoogleFonts.roboto(fontSize: 14, fontWeight: FontWeight.w400, letterSpacing: 0.25),
+    button:
+    GoogleFonts.roboto(fontSize: 14, fontWeight: FontWeight.w500, letterSpacing: 1.25),
+    caption:
+    GoogleFonts.roboto(fontSize: 12, fontWeight: FontWeight.w400, letterSpacing: 0.4),
+    overline:
+    GoogleFonts.roboto(fontSize: 10, fontWeight: FontWeight.w400, letterSpacing: 1.5),
+  );
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -69,36 +94,12 @@ class AppViewState extends State<AppView> {
         scaffoldBackgroundColor: const Color(0xFFE8EBFA),
         colorSchemeSeed: Colors.indigo,
         // Define the default font family.
-        textTheme: TextTheme(
-          headline1:
-              GoogleFonts.trainOne(fontSize: 116, fontWeight: FontWeight.w300, letterSpacing: -1.5),
-          headline2:
-              GoogleFonts.trainOne(fontSize: 72, fontWeight: FontWeight.w300, letterSpacing: -0.5),
-          headline3: GoogleFonts.trainOne(fontSize: 58, fontWeight: FontWeight.w400),
-          headline4:
-              GoogleFonts.trainOne(fontSize: 41, fontWeight: FontWeight.w400, letterSpacing: 0.25),
-          headline5: GoogleFonts.roboto(fontSize: 29, fontWeight: FontWeight.w400),
-          headline6:
-              GoogleFonts.roboto(fontSize: 24, fontWeight: FontWeight.w500, letterSpacing: 0.15),
-          subtitle1:
-              GoogleFonts.lora(fontSize: 19, fontWeight: FontWeight.w400, letterSpacing: 0.15),
-          subtitle2:
-              GoogleFonts.lora(fontSize: 17, fontWeight: FontWeight.w500, letterSpacing: 0.1),
-          bodyText1:
-              GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w400, letterSpacing: 0.5),
-          bodyText2:
-              GoogleFonts.roboto(fontSize: 14, fontWeight: FontWeight.w400, letterSpacing: 0.25),
-          button:
-              GoogleFonts.roboto(fontSize: 14, fontWeight: FontWeight.w500, letterSpacing: 1.25),
-          caption:
-              GoogleFonts.roboto(fontSize: 12, fontWeight: FontWeight.w400, letterSpacing: 0.4),
-          overline:
-              GoogleFonts.roboto(fontSize: 10, fontWeight: FontWeight.w400, letterSpacing: 1.5),
-        ),
+        textTheme: allTextTheme,
       ),
       darkTheme: ThemeData(
         colorSchemeSeed: Colors.indigo,
         brightness: Brightness.dark,
+        textTheme: allTextTheme,
       ),
       navigatorKey: _navigatorKey,
       builder: (context, child) {

@@ -7,6 +7,7 @@
 "invalidUsername" : "invalid email",
 "password" : "password",
 "invalidPassword" : "invalid password",
+"passwordInputVisualHelp" : "password input visual help",
 "passwordRequireUpperAndLowercaseNumAnd8min" : "uppercase, lowercase, numeric and minimum 8 characters",
 "goLoginButton" : "Login",
 "loginButton" : "Login",

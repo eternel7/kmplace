@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '/widgets/passwordfield.dart';
 import '/login/login.dart';
 import '/signup/signup.dart';
 import '/forgottenpassword/forgottenpassword.dart';
 import 'package:formz/formz.dart';
+import 'package:kmplace/constants.dart';
 
 class LoginForm extends StatelessWidget {
   const LoginForm({Key? key}) : super(key: key);
@@ -12,6 +14,20 @@ class LoginForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = I10n.of(context);
+    bool isScreenWide = MediaQuery.of(context).size.width >= kMinWidthOfLargeScreen;
+    List<Widget> footer = [
+      Text(t.noAccountYet),
+      TextButton(
+        child: Text(
+          t.goSignUpButton,
+          style: const TextStyle(fontSize: 20),
+        ),
+        onPressed: () {
+          Navigator.push(context, SignupPage.route());
+          //signup screen
+        },
+      )
+    ];
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state.status.isSubmissionFailure) {
@@ -49,22 +65,15 @@ class LoginForm extends StatelessWidget {
               ],
             ),
             const Padding(padding: EdgeInsets.all(12)),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(t.noAccountYet),
-                TextButton(
-                  child: Text(
-                    t.goSignUpButton,
-                    style: const TextStyle(fontSize: 20),
+            isScreenWide
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: footer,
+                  )
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: footer,
                   ),
-                  onPressed: () {
-                    Navigator.push(context, SignupPage.route());
-                    //signup screen
-                  },
-                )
-              ],
-            ),
           ],
         ),
       ),
@@ -82,9 +91,9 @@ class _UsernameInput extends StatelessWidget {
       builder: (context, state) {
         return TextField(
           key: const Key('loginForm_usernameInput_textField'),
-          onChanged: (username) =>
-              context.read<LoginBloc>().add(LoginUsernameChanged(username)),
+          onChanged: (username) => context.read<LoginBloc>().add(LoginUsernameChanged(username)),
           decoration: InputDecoration(
+            filled: true,
             labelText: t.username,
             errorText: state.username.invalid ? t.invalidUsername : null,
           ),
@@ -102,17 +111,12 @@ class _PasswordInput extends StatelessWidget {
     return BlocBuilder<LoginBloc, LoginState>(
       buildWhen: (previous, current) => previous.password != current.password,
       builder: (context, state) {
-        return TextField(
-          key: const Key('loginForm_passwordInput_textField'),
-          onChanged: (password) =>
-              context.read<LoginBloc>().add(LoginPasswordChanged(password)),
-          obscureText: true,
-          decoration: InputDecoration(
-            labelText: t.password,
-            errorText: state.password.invalid
-                ? t.passwordRequireUpperAndLowercaseNumAnd8min
-                : null,
-          ),
+        return PasswordField(
+          fieldKey: const Key('loginForm_passwordInput_textField'),
+          onChanged: (password) => context.read<LoginBloc>().add(LoginPasswordChanged(password!)),
+          labelText: t.password,
+          helperText: t.passwordRequireUpperAndLowercaseNumAnd8min,
+          errorText: state.password.invalid ? t.passwordRequireUpperAndLowercaseNumAnd8min : null,
         );
       },
     );
@@ -132,10 +136,8 @@ class _LoginButton extends StatelessWidget {
             : ElevatedButton(
                 key: const Key('loginForm_continue_raisedButton'),
                 style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50)),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 30, vertical: 10)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10)),
                 onPressed: state.status.isValidated
                     ? () {
                         context.read<LoginBloc>().add(const LoginSubmitted());

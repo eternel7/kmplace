@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '/forgottenpassword/forgottenpassword.dart';
 import '/signup/signup.dart';
 import 'package:formz/formz.dart';
+import 'package:kmplace/constants.dart';
 
 class ForgottenPasswordForm extends StatelessWidget {
   const ForgottenPasswordForm({Key? key}) : super(key: key);
@@ -11,7 +12,20 @@ class ForgottenPasswordForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = I10n.of(context);
-
+    bool isScreenWide = MediaQuery.of(context).size.width >= kMinWidthOfLargeScreen;
+    List<Widget> footer = [
+      Text(t.noAccountYet),
+      TextButton(
+        child: Text(
+          t.goSignUpButton,
+          style: const TextStyle(fontSize: 20),
+        ),
+        onPressed: () {
+          Navigator.push(context, SignupPage.route());
+          //signup screen
+        },
+      )
+    ];
     return BlocListener<ForgottenPasswordBloc, ForgottenPasswordState>(
       listener: (context, state) {
         if (state.status.isSubmissionFailure) {
@@ -31,22 +45,15 @@ class ForgottenPasswordForm extends StatelessWidget {
             const Padding(padding: EdgeInsets.all(12)),
             _ForgottenPasswordButton(),
             const Padding(padding: EdgeInsets.all(12)),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(t.noAccountYet),
-                TextButton(
-                  child: Text(
-                    t.goSignUpButton,
-                    style: const TextStyle(fontSize: 20),
+            isScreenWide
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: footer,
+                  )
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: footer,
                   ),
-                  onPressed: () {
-                    Navigator.push(context, SignupPage.route());
-                    //signup screen
-                  },
-                )
-              ],
-            ),
           ],
         ),
       ),
@@ -67,6 +74,7 @@ class _EmailInput extends StatelessWidget {
           onChanged: (email) =>
               context.read<ForgottenPasswordBloc>().add(ForgottenPasswordUsernameChanged(email)),
           decoration: InputDecoration(
+            filled: true,
             labelText: t.username,
             errorText: state.email.invalid ? t.invalidUsername : null,
           ),
@@ -75,6 +83,7 @@ class _EmailInput extends StatelessWidget {
     );
   }
 }
+
 class _ForgottenPasswordButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -86,19 +95,19 @@ class _ForgottenPasswordButton extends StatelessWidget {
         return state.status.isSubmissionInProgress
             ? const CircularProgressIndicator()
             : ElevatedButton(
-          key: const Key('forgottenPasswordForm_continue_raisedButton'),
-          style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50)),
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 30, vertical: 10)),
-          onPressed: state.status.isValidated
-              ? () {
-            context.read<ForgottenPasswordBloc>().add(const ForgottenPasswordSubmitted());
-          }
-              : null,
-          child: Text(t.forgottenPasswordButton),
-        );
+                key: const Key('forgottenPasswordForm_continue_raisedButton'),
+                style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10)),
+                onPressed: state.status.isValidated
+                    ? () {
+                        context
+                            .read<ForgottenPasswordBloc>()
+                            .add(const ForgottenPasswordSubmitted());
+                      }
+                    : null,
+                child: Text(t.forgottenPasswordButton),
+              );
       },
     );
   }

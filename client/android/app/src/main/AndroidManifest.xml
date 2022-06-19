@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.unicorn.client">
    <application
-        android:label="kmplace"
+        android:label="KM place"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
