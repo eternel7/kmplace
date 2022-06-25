@@ -37,9 +37,12 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     Emitter<SignupState> emit,
   ) {
     final password = Password.dirty(event.password);
+    final confirmPassword =
+        ConfirmedPassword.dirty(password: password.value, value: state.confirmPassword.value);
     emit(state.copyWith(
       password: password,
-      status: Formz.validate([password, state.confirmPassword, state.username]),
+      confirmPassword: confirmPassword,
+      status: Formz.validate([password, confirmPassword, state.username]),
     ));
   }
 

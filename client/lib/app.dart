@@ -91,7 +91,7 @@ class AppViewState extends State<AppView> {
         Locale('fr', ''),
       ],
       theme: ThemeData(
-        scaffoldBackgroundColor: const Color(0xFFE8EBFA),
+        scaffoldBackgroundColor: const Color(0xFFF0F0FF),
         colorSchemeSeed: Colors.indigo,
         // Define the default font family.
         textTheme: allTextTheme,

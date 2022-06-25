@@ -80,8 +80,35 @@ final List<IconData> iconData = <IconData>[
   Icons.category,
   Icons.category_outlined,
   Icons.celebration,
+  Icons.change_history,
+  Icons.check_box_rounded,
+  Icons.check_circle_outline,
+  Icons.checkroom,
+  Icons.church,
+  Icons.child_care,
+  Icons.cloud,
+  Icons.cloud_done_outlined,
+  Icons.coffee,
+  Icons.coffee_maker,
+  Icons.coffee_outlined,
+  Icons.commit,
+  Icons.computer,
+  Icons.confirmation_num,
+  Icons.confirmation_num_outlined,
+  Icons.connecting_airports,
+  Icons.construction,
+  Icons.contact_page,
+  Icons.contacts,
+  Icons.cookie,
+  Icons.cookie_outlined,
+  Icons.cruelty_free,
+  Icons.cruelty_free_outlined,
+  Icons.deck,
+  Icons.design_services,
+  Icons.design_services_outlined,
   Icons.favorite,
   Icons.grade,
+  Icons.mosque,
   Icons.mood,
   Icons.star,
 ];
@@ -145,7 +172,6 @@ class PasswordFieldState extends State<PasswordField> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween, // added line
             mainAxisSize: MainAxisSize.min, // added line
             children: <Widget>[
-              Icon(_obscureText ? Icons.visibility : Icons.visibility_off),
               passwordController.text.isNotEmpty && passwordController.text.length > 4
                   ? Tooltip(
                       message: t.passwordInputVisualHelp,
@@ -153,6 +179,8 @@ class PasswordFieldState extends State<PasswordField> {
                           color: Colors.primaries[hashNumColor % Colors.primaries.length]),
                     )
                   : const SizedBox(width: 24.0),
+              Icon(_obscureText ? Icons.visibility : Icons.visibility_off),
+              const SizedBox(width: 5.0)
             ],
           ),
         ),
