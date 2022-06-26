@@ -8,6 +8,7 @@ __pycache__/
 # Distribution / packaging
 .Python
 env/
+venv/
 bin/
 build/
 develop-eggs/
@@ -20,6 +21,7 @@ sdist/
 var/
 *.egg-info/
 .installed.cfg
+CppProperties.json
 *.egg
 
 # Installer logs
