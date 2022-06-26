@@ -43,7 +43,7 @@ class SignupForm extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            _UsernameInput(),
+            _EmailInput(),
             const Padding(padding: EdgeInsets.all(12)),
             _PasswordInput(),
             const Padding(padding: EdgeInsets.all(12)),
@@ -61,21 +61,21 @@ class SignupForm extends StatelessWidget {
   }
 }
 
-class _UsernameInput extends StatelessWidget {
+class _EmailInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = I10n.of(context);
 
     return BlocBuilder<SignupBloc, SignupState>(
-      buildWhen: (previous, current) => previous.username != current.username,
+      buildWhen: (previous, current) => previous.email != current.email,
       builder: (context, state) {
         return TextField(
-          key: const Key('SignupForm_usernameInput_textField'),
-          onChanged: (username) => context.read<SignupBloc>().add(SignupUsernameChanged(username)),
+          key: const Key('SignupForm_emailInput_textField'),
+          onChanged: (email) => context.read<SignupBloc>().add(SignupEmailChanged(email)),
           decoration: InputDecoration(
             filled: true,
-            labelText: t.username,
-            errorText: state.username.invalid ? t.invalidUsername : null,
+            labelText: t.email,
+            errorText: state.email.invalid ? t.invalidEmail : null,
           ),
         );
       },

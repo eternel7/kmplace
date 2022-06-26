@@ -7,8 +7,8 @@ abstract class ForgottenPasswordEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class ForgottenPasswordUsernameChanged extends ForgottenPasswordEvent {
-  const ForgottenPasswordUsernameChanged(this.email);
+class ForgottenPasswordEmailChanged extends ForgottenPasswordEvent {
+  const ForgottenPasswordEmailChanged(this.email);
 
   final String email;
 

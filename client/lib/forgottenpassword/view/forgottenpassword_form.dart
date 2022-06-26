@@ -70,13 +70,13 @@ class _EmailInput extends StatelessWidget {
       buildWhen: (previous, current) => previous.email != current.email,
       builder: (context, state) {
         return TextField(
-          key: const Key('forgottenPasswordForm_usernameInput_textField'),
+          key: const Key('forgottenPasswordForm_emailInput_textField'),
           onChanged: (email) =>
-              context.read<ForgottenPasswordBloc>().add(ForgottenPasswordUsernameChanged(email)),
+              context.read<ForgottenPasswordBloc>().add(ForgottenPasswordEmailChanged(email)),
           decoration: InputDecoration(
             filled: true,
-            labelText: t.username,
-            errorText: state.email.invalid ? t.invalidUsername : null,
+            labelText: t.email,
+            errorText: state.email.invalid ? t.invalidEmail : null,
           ),
         );
       },

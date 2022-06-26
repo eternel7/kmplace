@@ -13,7 +13,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     required AuthenticationRepository authenticationRepository,
   })  : _authenticationRepository = authenticationRepository,
         super(const SignupState()) {
-    on<SignupUsernameChanged>(_onUsernameChanged);
+    on<SignupEmailChanged>(_onEmailChanged);
     on<SignupPasswordChanged>(_onPasswordChanged);
     on<SignupConfirmPasswordChanged>(_onConfirmPasswordChanged);
     on<SignupSubmitted>(_onSubmitted);
@@ -21,14 +21,14 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
 
   final AuthenticationRepository _authenticationRepository;
 
-  void _onUsernameChanged(
-    SignupUsernameChanged event,
+  void _onEmailChanged(
+    SignupEmailChanged event,
     Emitter<SignupState> emit,
   ) {
-    final username = Username.dirty(event.username);
+    final email = Email.dirty(event.email);
     emit(state.copyWith(
-      username: username,
-      status: Formz.validate([state.password, state.confirmPassword, username]),
+      email: email,
+      status: Formz.validate([state.password, state.confirmPassword, email]),
     ));
   }
 
@@ -42,7 +42,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     emit(state.copyWith(
       password: password,
       confirmPassword: confirmPassword,
-      status: Formz.validate([password, confirmPassword, state.username]),
+      status: Formz.validate([password, confirmPassword, state.email]),
     ));
   }
 
@@ -54,7 +54,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
         ConfirmedPassword.dirty(password: state.password.value, value: event.confirmPassword);
     emit(state.copyWith(
       confirmPassword: confirmPassword,
-      status: Formz.validate([state.password, confirmPassword, state.username]),
+      status: Formz.validate([state.password, confirmPassword, state.email]),
     ));
   }
 
@@ -66,7 +66,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
       emit(state.copyWith(status: FormzStatus.submissionInProgress));
       try {
         await _authenticationRepository.signUp(
-          username: state.username.value,
+          email: state.email.value,
           password: state.password.value,
           confirmPassword: state.confirmPassword.value,
         );

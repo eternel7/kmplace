@@ -13,17 +13,17 @@ class ForgottenPasswordBloc extends Bloc<ForgottenPasswordEvent, ForgottenPasswo
     required AuthenticationRepository authenticationRepository,
   })  : _authenticationRepository = authenticationRepository,
         super(const ForgottenPasswordState()) {
-    on<ForgottenPasswordUsernameChanged>(_onUsernameChanged);
+    on<ForgottenPasswordEmailChanged>(_onEmailChanged);
     on<ForgottenPasswordSubmitted>(_onSubmitted);
   }
 
   final AuthenticationRepository _authenticationRepository;
 
-  void _onUsernameChanged(
-    ForgottenPasswordUsernameChanged event,
+  void _onEmailChanged(
+      ForgottenPasswordEmailChanged event,
     Emitter<ForgottenPasswordState> emit,
   ) {
-    final email = Username.dirty(event.email);
+    final email = Email.dirty(event.email);
     emit(state.copyWith(
       email: email,
       status: Formz.validate([email]),
