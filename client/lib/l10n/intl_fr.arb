@@ -23,5 +23,9 @@
 "forgottenPasswordButton" : "Envoyer",
 "logout" : "Déconnexion",
 "userEmailProfile" : "Couriel : ",
-"userLoginCount" : "Nombre de connexion : "
+"userLoginCount" : "Nombre de connexion : ",
+"settingsTitle" : "Préférences",
+"serviceUrl" : "URL du service",
+"settingsSaveButton" : "Sauvegarder",
+"settingsDeleteButton" : "Vider"
 }

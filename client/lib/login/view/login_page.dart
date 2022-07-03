@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '/login/login.dart';
+import '/settings/settings.dart';
 import '/banner/banner.dart';
 
 class LoginPage extends StatelessWidget {
@@ -17,7 +18,20 @@ class LoginPage extends StatelessWidget {
     final t = I10n.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text(t.loginTitle), automaticallyImplyLeading: false),
+      appBar: AppBar(title: Text(t.loginTitle), automaticallyImplyLeading: false,
+        actions: [
+          Container(
+            margin: const EdgeInsets.symmetric(
+              horizontal: 20,
+            ),
+            child: InkWell(
+              child: const Icon(Icons.settings),
+              onTap: () {
+                Navigator.push(context, SettingsPage.route());
+              },
+            ),
+          )
+        ],),
       body: SingleChildScrollView(
         child: Column(children: <Widget>[
           const BannerWidget(),

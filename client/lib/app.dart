@@ -4,9 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '/authentication/authentication.dart';
 import '/home/home.dart';
 import '/login/login.dart';
+import '/settings/settings.dart';
 import '/splash/splash.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -44,8 +46,22 @@ class AppView extends StatefulWidget {
 
 class AppViewState extends State<AppView> {
   final _navigatorKey = GlobalKey<NavigatorState>();
-
+  String _serviceUrl = "";
   NavigatorState get _navigator => _navigatorKey.currentState!;
+  late SharedPreferences prefs;
+
+  void loadServiceURL() async {
+    prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _serviceUrl = (prefs.getString('serviceUrl') ?? "");
+    });
+  }
+  @override
+  void initState() {
+    super.initState();
+    loadServiceURL();
+  }
+
   TextTheme allTextTheme = TextTheme(
     headline1:
     GoogleFonts.trainOne(fontSize: 116, fontWeight: FontWeight.w300, letterSpacing: -1.5),
@@ -114,7 +130,7 @@ class AppViewState extends State<AppView> {
                 break;
               case AuthenticationStatus.unauthenticated:
                 _navigator.pushAndRemoveUntil<void>(
-                  LoginPage.route(),
+                    (_serviceUrl!="") ? LoginPage.route() : SettingsPage.route(),
                   (route) => false,
                 );
                 break;

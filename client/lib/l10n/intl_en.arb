@@ -23,5 +23,9 @@
 "forgottenPasswordButton" : "Send recover mail",
 "logout" : "Logout",
 "userEmailProfile" : "Email: ",
-"userLoginCount" : "Login count: "
+"userLoginCount" : "Login count: ",
+"settingsTitle" : "Settings",
+"serviceUrl" : "Service URL",
+"settingsSaveButton" : "Save",
+"settingsDeleteButton" : "Empty"
 }

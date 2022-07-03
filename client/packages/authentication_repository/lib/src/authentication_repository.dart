@@ -3,8 +3,6 @@ import 'dart:convert' as convert;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
-const backendUrl = 'localhost:5000';
-
 enum AuthenticationStatus { unknown, authenticated, unauthenticated }
 
 class AuthenticationRepository {
@@ -22,14 +20,18 @@ class AuthenticationRepository {
   }) async {
     // Await the http get response, then decode the json-formatted response.
     try {
+      // Obtain shared preferences.
+      final prefs = await SharedPreferences.getInstance();
+      String? backendUrl = prefs.getString('serviceUrl');
+      if (backendUrl == null || backendUrl == "") {
+        throw new Exception('Missing backendUrl');
+      }
       var response = await http.post(Uri.http(backendUrl, '/api/login'),
           headers: {"Access-Control-Allow-Origin": "*"},
           body: {'email': email, 'password': password});
       if (response.statusCode == 200) {
         var jsonResponse = convert.jsonDecode(response.body) as Map<String, dynamic>;
         if (jsonResponse['status'] == true) {
-          // Obtain shared preferences.
-          final prefs = await SharedPreferences.getInstance();
           prefs.setString('login_response', response.body).then((bool success) {
             if (success) {
               prefs.setString('token', jsonResponse['data']['token']).then((bool success) {
@@ -60,6 +62,12 @@ class AuthenticationRepository {
     if (password == confirmPassword) {
       // Await the http get response, then decode the json-formatted response.
       try {
+        // Obtain shared preferences.
+        final prefs = await SharedPreferences.getInstance();
+        String? backendUrl = prefs.getString('serviceUrl');
+        if (backendUrl == null || backendUrl == "") {
+          throw new Exception('Missing backendUrl');
+        }
         var response = await http.post(Uri.http(backendUrl, '/api/register'),
             headers: {"Access-Control-Allow-Origin": "*"},
             body: {'email': email, 'password': password});
