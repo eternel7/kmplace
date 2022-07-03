@@ -1,7 +1,8 @@
 from flask import Flask, request, jsonify
 from kmplace import app, db
 from models.user import User
-import time
+import datetime
+import secrets
 
 
 @app.route('/', methods=['GET'])
@@ -20,9 +21,8 @@ def profile(email):
 
 @app.route('/api/login', methods=['POST'])
 def login():
-    time.sleep(1)
 
-    content = request.json
+    content = request.form
 
     email = get_value_from_dict(content,"email")
     password = get_value_from_dict(content,"password")
@@ -43,11 +43,14 @@ def login():
     else:
         # Increase login count by 1
         user.login_counts = user.login_counts + 1
+        user.token = secrets.token_urlsafe(16)
+        user.token_date = datetime.datetime.now()
         db.session.commit()
 
         status = True
         message = "User logged in"
-        data = {"token" : str(user.id)}
+        data = {"token" : user.token,
+                "user" : user.get_json_data()}
         response = construct_response(status=status, message=message, data=data)
         return jsonify(response)
 

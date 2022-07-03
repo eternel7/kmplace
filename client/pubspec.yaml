@@ -39,6 +39,7 @@ dependencies:
   equatable: ^2.0.0
   google_fonts: ^3.0.1
   http: ^0.13.4
+  shared_preferences: ^2.0.15
   authentication_repository:
     path: packages/authentication_repository
   user_repository:

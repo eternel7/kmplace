@@ -21,5 +21,7 @@
 "confirmPasswordInvalid" : "Confirmation du mot de passe différente de l'original",
 "forgottenPasswordTitle" : "Mot de passe oublié",
 "forgottenPasswordButton" : "Envoyer",
-"logout" : "Déconnexion"
+"logout" : "Déconnexion",
+"userEmailProfile" : "Couriel : ",
+"userLoginCount" : "Nombre de connexion : "
 }

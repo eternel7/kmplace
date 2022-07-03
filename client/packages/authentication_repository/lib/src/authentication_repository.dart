@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert' as convert;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 const backendUrl = 'localhost:5000';
@@ -19,10 +20,32 @@ class AuthenticationRepository {
     required String email,
     required String password,
   }) async {
-    await Future.delayed(
-      const Duration(milliseconds: 300),
-      () => _controller.add(AuthenticationStatus.authenticated),
-    );
+    // Await the http get response, then decode the json-formatted response.
+    try {
+      var response = await http.post(Uri.http(backendUrl, '/api/login'),
+          headers: {"Access-Control-Allow-Origin": "*"},
+          body: {'email': email, 'password': password});
+      if (response.statusCode == 200) {
+        var jsonResponse = convert.jsonDecode(response.body) as Map<String, dynamic>;
+        if (jsonResponse['status'] == true) {
+          // Obtain shared preferences.
+          final prefs = await SharedPreferences.getInstance();
+          prefs.setString('login_response', response.body).then((bool success) {
+            if (success) {
+              prefs.setString('token', jsonResponse['data']['token']).then((bool success) {
+                if (success) {
+                  _controller.add(AuthenticationStatus.authenticated);
+                }
+              });
+            }
+          });
+        }
+      } else {
+        print('Request failed with status: ${response.statusCode}.');
+      }
+    } catch (e) {
+      print("Error: " + e.toString());
+    }
   }
 
   void logOut() {
@@ -36,18 +59,12 @@ class AuthenticationRepository {
   }) async {
     if (password == confirmPassword) {
       // Await the http get response, then decode the json-formatted response.
-      print("response before");
       try {
         var response = await http.post(Uri.http(backendUrl, '/api/register'),
-            headers:{"Access-Control-Allow-Origin": "*"},
+            headers: {"Access-Control-Allow-Origin": "*"},
             body: {'email': email, 'password': password});
-        print("response after");
-        print(response.body);
         if (response.statusCode == 200) {
-          print(response.body);
-          var jsonResponse =
-          convert.jsonDecode(response.body) as Map<String, dynamic>;
-          print(jsonResponse);
+          logIn(email: email, password: password);
         } else {
           print('Request failed with status: ${response.statusCode}.');
         }

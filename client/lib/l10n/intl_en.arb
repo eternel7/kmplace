@@ -21,5 +21,7 @@
 "confirmPasswordInvalid" : "'confirm password' no identical to password",
 "forgottenPasswordTitle" : "Forgotten password",
 "forgottenPasswordButton" : "Send recover mail",
-"logout" : "Logout"
+"logout" : "Logout",
+"userEmailProfile" : "Email: ",
+"userLoginCount" : "Login count: "
 }

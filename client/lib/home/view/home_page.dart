@@ -21,10 +21,24 @@ class HomePage extends StatelessWidget {
           children: <Widget>[
             Builder(
               builder: (context) {
-                final userId = context.select(
-                  (AuthenticationBloc bloc) => bloc.state.user.id,
+                final user = context.select(
+                  (AuthenticationBloc bloc) => bloc.state.user,
                 );
-                return Text('UserID: $userId');
+                return Column(children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Center(
+                      child: Text(t.userEmailProfile + user.email),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Center(
+                      child: Text(t.userLoginCount + user.login_counts.toString()),
+                    ),
+                  ),
+                  const SizedBox(width: 50, height: 50),
+                ]);
               },
             ),
             ElevatedButton(
