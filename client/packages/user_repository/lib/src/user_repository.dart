@@ -18,8 +18,11 @@ class UserRepository {
           (u['fullname'] is String) ? u['fullname'] : '-',
           (u['username'] is String) ? u['username'] : '-',
           (u['login_counts'] is int) ? u['login_counts'] : -1);
-      print(_user);
     }
     return _user;
+  }
+
+  Future<void> unsetUser() async {
+    _user = null;
   }
 }

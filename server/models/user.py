@@ -7,7 +7,7 @@ class User(db.Model):
     username = db.Column(db.String(64), index=True, unique=False)
     fullname = db.Column(db.String(100), index=True, unique=False)
     login_counts = db.Column(db.Integer,default=0)
-    password_hash = db.Column(db.String(128))
+    password_hash = db.Column(db.String(300))
     token = db.Column(db.String(42))
     token_date = db.Column(db.DateTime())
     forgotten_password_token = db.Column(db.String(42))

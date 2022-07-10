@@ -50,8 +50,13 @@ class AuthenticationRepository {
     }
   }
 
-  void logOut() {
+  Future<void> logOut() async {
     _controller.add(AuthenticationStatus.unauthenticated);
+    // Obtain shared preferences.
+    final prefs = await SharedPreferences.getInstance();
+    // Remove data from local storage.
+    final s1 = await prefs.remove('login_response');
+    final s2 = await prefs.remove('token');
   }
 
   Future<void> signUp({
