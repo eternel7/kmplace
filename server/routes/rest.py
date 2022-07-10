@@ -1,9 +1,11 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
+from flask_mail import Mail, Message
 from kmplace import app, db
 from models.user import User
 import datetime
 import secrets
 
+mail = Mail(app)
 
 @app.route('/', methods=['GET'])
 def home():
@@ -80,10 +82,22 @@ def register():
     u = User()
     u.email = email
     u.set_password(password)
-
+    activation_token = secrets.token_urlsafe(16)[0:8]
+    u.activation_token = activation_token
+    u.activation_date = datetime.datetime.now()
+    
     db.session.add(u)
     db.session.commit()
 
+    # Send activation email
+    msg = Message('Hello', sender = 'kmplace@unkown.app', recipients = [email])
+    msg.body = "Hello, this is a registration message send from KMplace. \n Here is your activation code : "+activation_token 
+    msg.html = render_template('emails/activation.html',activation_token=activation_token)
+    msg.attach('activation.png','image/png',open('./templates/assets/activation.png', 'rb').read(), 'inline', headers=[['Content-ID','<activation_img>'],])
+    msg.attach('logo_home.png','image/png',open('./templates/assets/logo_home.png', 'rb').read(), 'inline', headers=[['Content-ID','<logo_home_img>'],])
+    mail.send(msg)
+    
+    # Send response
     status = True
     message = "You have been registered"
     response = construct_response(status=status, message=message, data=u.get_json_data())

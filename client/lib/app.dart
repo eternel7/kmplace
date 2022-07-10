@@ -90,6 +90,7 @@ class AppViewState extends State<AppView> {
   );
   @override
   Widget build(BuildContext context) {
+    loadServiceURL(); //include to not redirect to setting if update since init
     return MaterialApp(
       localizationsDelegates: const [
         I10n.delegate,
@@ -108,12 +109,12 @@ class AppViewState extends State<AppView> {
       ],
       theme: ThemeData(
         scaffoldBackgroundColor: const Color(0xFFF0F0FF),
-        colorSchemeSeed: Colors.indigo,
+        colorSchemeSeed: const Color(0xFF01499D), //Colors.indigo,
         // Define the default font family.
         textTheme: allTextTheme,
       ),
       darkTheme: ThemeData(
-        colorSchemeSeed: Colors.indigo,
+        colorSchemeSeed: const Color(0xFF01499D),
         brightness: Brightness.dark,
         textTheme: allTextTheme,
       ),
