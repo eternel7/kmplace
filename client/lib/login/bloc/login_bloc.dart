@@ -53,6 +53,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           password: state.password.value,
         );
         emit(state.copyWith(status: FormzStatus.submissionSuccess));
+      } on ActivationException catch(e) {
+        emit(state.copyWith(status: FormzStatus.submissionFailure, message : "$e", type :"activation"));
+      }  on MsgException catch(e) {
+        emit(state.copyWith(status: FormzStatus.submissionFailure, message : "$e", type :"msg"));
+      }  on SettingException catch(e) {
+        emit(state.copyWith(status: FormzStatus.submissionFailure, message : "$e", type :"setting"));
+      }  on ServiceException catch(e) {
+        emit(state.copyWith(status: FormzStatus.submissionFailure, message : "$e", type :"service"));
       } catch (_) {
         emit(state.copyWith(status: FormzStatus.submissionFailure));
       }

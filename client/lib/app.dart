@@ -110,12 +110,15 @@ class AppViewState extends State<AppView> {
       theme: ThemeData(
         scaffoldBackgroundColor: const Color(0xFFF0F0FF),
         colorSchemeSeed: const Color(0xFF01499D), //Colors.indigo,
+
         // Define the default font family.
+        fontFamily: 'Roboto',
         textTheme: allTextTheme,
       ),
       darkTheme: ThemeData(
         colorSchemeSeed: const Color(0xFF01499D),
         brightness: Brightness.dark,
+        fontFamily: 'Roboto',
         textTheme: allTextTheme,
       ),
       navigatorKey: _navigatorKey,

@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -41,6 +40,7 @@ class AuthenticationBloc
   ) async {
     switch (event.status) {
       case AuthenticationStatus.unauthenticated:
+        await _userRepository.unsetUser();
         return emit(const AuthenticationState.unauthenticated());
       case AuthenticationStatus.authenticated:
         await _userRepository.unsetUser();

@@ -21,11 +21,19 @@
 "confirmPasswordInvalid" : "Confirmation du mot de passe différente de l'original",
 "forgottenPasswordTitle" : "Mot de passe oublié",
 "forgottenPasswordButton" : "Envoyer",
+"forgottenPasswordSend" : "Un courriel a été envoyer à l'adresse saisie. Si aucun courriel n'a été reçu dans les minutes suivante, veuillez vérifier vos spam. Si aucun courriel n'arrive, alors c'est qu'il n'existe pas de compte associé à ce courriel.",
 "logout" : "Déconnexion",
 "userEmailProfile" : "Couriel : ",
 "userLoginCount" : "Nombre de connexion : ",
 "settingsTitle" : "Préférences",
 "serviceUrl" : "URL du service",
 "settingsSaveButton" : "Sauvegarder",
-"settingsDeleteButton" : "Vider"
+"settingsDeleteButton" : "Vider",
+"activationNeeded" : "Activation du compte nécessaire",
+"activationValidateButton" : "Enregistrer",
+"activationSendButton" : "Demander à nouveau",
+"activationCode" : "Code d'activation",
+"activationCodeRequired" : "Code d'activation nécessaire",
+"activationCodeSendAgain" : "Nouveau code d'activation envoyé",
+"activationCodeIncorrect" : "Code d'activation incorrect"
 }

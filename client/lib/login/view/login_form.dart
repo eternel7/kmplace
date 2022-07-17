@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:convert' as convert;
 import '/widgets/passwordfield.dart';
 import '/login/login.dart';
 import '/signup/signup.dart';
 import '/forgottenpassword/forgottenpassword.dart';
+import '/activation/activation.dart';
+import '/settings/settings.dart';
 import 'package:formz/formz.dart';
 import 'package:kmplace/constants.dart';
 
@@ -31,11 +34,18 @@ class LoginForm extends StatelessWidget {
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state.status.isSubmissionFailure) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(content: Text(t.authenticationFailure)),
-            );
+          if (state.type == "service") {
+            Navigator.push(context, SettingsPage.route());
+          } else if (state.type == "activation") {
+            var info = convert.jsonDecode(state.message);
+            Navigator.push(context, ActivationPage.route(info));
+          } else {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(content: Text(t.authenticationFailure)),
+              );
+          }
         }
       },
       child: Align(
