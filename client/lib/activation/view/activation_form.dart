@@ -7,10 +7,9 @@ import '/settings/settings.dart';
 import 'package:formz/formz.dart';
 
 class ActivationForm extends StatelessWidget {
-  ActivationForm({Key? key, required this.information}) : super(key: key);
+  const ActivationForm({Key? key, required this.information}) : super(key: key);
 
   final Map<String, dynamic> information;
-  final TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +18,6 @@ class ActivationForm extends StatelessWidget {
     return BlocListener<ActivationBloc, ActivationState>(
       listener: (context, state) {
         if (state.status.isSubmissionFailure) {
-          print(state);
           if (state.type == "setting") {
             Navigator.push(context, SettingsPage.route());
           } else if (state.type == "activation") {

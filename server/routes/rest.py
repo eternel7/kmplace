@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, abort, jsonify, render_template
 from flask_mail import Mail, Message
 from kmplace import app, db
 from models.user import User
@@ -110,6 +110,7 @@ def register():
     response = construct_response(status=status, message=message, data=u.get_json_data())
     return jsonify(response)
 
+
 @app.route('/api/activation', methods=['POST'])
 def activation():
 
@@ -189,6 +190,95 @@ def activationsend():
         data = {"user" : user.get_json_data()}
         response = construct_response(status=status, message=message, data=data)
         return jsonify(response)
+
+@app.route('/api/forgottenpasswordcode', methods=['POST'])
+def forgottenpasswordcodesend():
+
+    content = request.form
+
+    email = get_value_from_dict(content,"email")
+
+    if not validate_string(email):
+        status = False
+        message = "Invalid data"
+        response = construct_response(status=status, message=message)
+        return jsonify(response)
+
+    user = User.query.filter_by(email=email).first()
+    if user is None:
+        status = True
+        message = "Message send"
+        response = construct_response(status=status, message=message)
+        return jsonify(response)
+    else:
+        forgotten_token = secrets.token_urlsafe(16)
+        user.set_forgottenpasswordcode(forgotten_token)
+        user.forgotten_password_date = datetime.datetime.now()
+        db.session.commit()
+
+        # Send forgotten password code by email
+        msg = Message('Hello', sender = sendermail, recipients = [email])
+        msg.body = "Need to reset your password? \nUse your secret code!\nforgotten_token\nIf you did not forget your password, you can ignore this email."
+        msg.html = render_template('emails/forgottenpassword.html',forgotten_password_token=forgotten_token,title='Forgotten password code',email=email)
+        msg.attach('forgot_password.png','image/png',open('./templates/assets/forgot_password.png', 'rb').read(), 'inline', headers=[['Content-ID','<forgotten_password_img>'],])
+        msg.attach('logo_home.png','image/png',open('./templates/assets/logo_home.png', 'rb').read(), 'inline', headers=[['Content-ID','<logo_home_img>'],])
+        mail.send(msg)
+
+        status = True
+        message = "Message send"
+        response = construct_response(status=status, message=message)
+        return jsonify(response)
+
+
+@app.route('/api/forgottenpassword', methods=['POST'])
+def forgottenpassword():
+
+    content = request.form
+
+    email = get_value_from_dict(content,'email')
+    password = get_value_from_dict(content,'password')
+    code = get_value_from_dict(content,'code')
+
+    valid_input = validate_list_of_strings([email, password, code])
+    if not valid_input:
+        status = False
+        message = "Invalid data"
+        response = construct_response(status=status, message=message)
+        return jsonify(response)
+
+    user = User.query.filter_by(email=email).first()
+    if user is None or not user.check_forgottenpasswordcode(code):
+        status = False
+        message = "Username or code incorrect"
+        response = construct_response(status=status, message=message)
+        return jsonify(response)
+    elif user.forgotten_password_date < datetime.datetime.now() - datetime.timedelta(days=1) :
+        status = False
+        message = "Code too old"
+        data = {"user" : user.get_json_data()}
+        response = construct_response(status=status, message=message, data=data)
+        return jsonify(response)
+    else:
+        user.forgotten_password_token = ""
+        user.set_password(password)
+        if not user.activate :
+            user.activate = True
+        db.session.commit()
+            
+        # Send update password email
+        msg = Message('Hello', sender = sendermail, recipients = [email])
+        msg.body = "Hello, your account on KMplace was just updated. \n If you suspect this is an unauthorized access, please Reset Your Password on KMplace." 
+        msg.html = render_template('emails/updatedpassword.html',title='Password updated')
+        msg.attach('password_updated.png','image/png',open('./templates/assets/password_updated.png', 'rb').read(), 'inline', headers=[['Content-ID','<password_updated_img>'],])
+        msg.attach('logo_home.png','image/png',open('./templates/assets/logo_home.png', 'rb').read(), 'inline', headers=[['Content-ID','<logo_home_img>'],])
+        mail.send(msg)
+    
+        # Send response
+        status = True
+        message = "Your password was successfully updated"
+        response = construct_response(status=status, message=message, data=user.get_json_data())
+        return jsonify(response)
+
 
 # Helpers
 def validate_string(input):

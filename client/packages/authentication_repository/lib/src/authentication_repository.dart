@@ -127,10 +127,9 @@ class AuthenticationRepository {
     } else {
       throw ServiceException("Http error with status : ${response.statusCode}");
     }
-  }  Future<void> activationSend({
-    required String email,
-    required String password
-  }) async {
+  }
+
+  Future<void> activationSend({required String email, required String password}) async {
     // Obtain shared preferences.
     final prefs = await SharedPreferences.getInstance();
     String? backendUrl = prefs.getString('serviceUrl');
@@ -165,37 +164,78 @@ class AuthenticationRepository {
     required String confirmPassword,
   }) async {
     if (password == confirmPassword) {
-      // Await the http get response, then decode the json-formatted response.
-      try {
-        // Obtain shared preferences.
-        final prefs = await SharedPreferences.getInstance();
-        String? backendUrl = prefs.getString('serviceUrl');
-        if (backendUrl == null || backendUrl == "") {
-          throw new MsgException('Missing backendUrl');
-        }
-        var response = await http.post(Uri.http(backendUrl, '/api/register'),
-            headers: {"Access-Control-Allow-Origin": "*"},
-            body: {'email': email, 'password': password});
-        if (response.statusCode == 200) {
+      // Obtain shared preferences.
+      final prefs = await SharedPreferences.getInstance();
+      String? backendUrl = prefs.getString('serviceUrl');
+      if (backendUrl == null || backendUrl == "") {
+        throw new SettingException('Missing backendUrl');
+      }
+      var response = await http.post(Uri.http(backendUrl, '/api/register'),
+          headers: {"Access-Control-Allow-Origin": "*"},
+          body: {'email': email, 'password': password});
+      if (response.statusCode == 200) {
+        var jsonResponse = convert.jsonDecode(response.body) as Map<String, dynamic>;
+        if (jsonResponse['status'] == true) {
           logIn(email: email, password: password);
         } else {
-          print('Request failed with status: ${response.statusCode}.');
+          throw new MsgException('Missing backendUrl');
         }
-      } catch (e) {
-        print("Error: " + e.toString());
+      } else {
+        throw ServiceException("Http error with status : ${response.statusCode}");
       }
     } else {
-      print("incorrect password confirmation");
+      throw new MsgException('incorrect password confirmation');
     }
   }
 
   Future<void> forgottenPassword({
     required String email,
+    required String code,
+    required String password,
+    required String confirmPassword,
   }) async {
-    await Future.delayed(
-      const Duration(milliseconds: 300),
-      () => _controller.add(AuthenticationStatus.authenticated),
-    );
+    if (password == confirmPassword) {
+      // Obtain shared preferences.
+      final prefs = await SharedPreferences.getInstance();
+      String? backendUrl = prefs.getString('serviceUrl');
+      if (backendUrl == null || backendUrl == "") {
+        throw new SettingException('Missing backendUrl');
+      }
+      var response = await http.post(Uri.http(backendUrl, '/api/forgottenpassword'),
+          headers: {"Access-Control-Allow-Origin": "*"},
+          body: {'email': email, 'password': password, 'code': code});
+      if (response.statusCode == 200) {
+        var jsonResponse = convert.jsonDecode(response.body) as Map<String, dynamic>;
+        if (jsonResponse['status'] == true) {
+          logIn(email: email, password: password);
+        } else {
+          throw ActivationException(jsonResponse['message']);
+        }
+      } else {
+        throw ServiceException("Http error with status : ${response.statusCode}");
+      }
+    } else {
+      throw new MsgException('incorrect password confirmation');
+    }
+  }
+
+  Future<void> forgottenPasswordCodeSend({required String email}) async {
+    // Obtain shared preferences.
+    final prefs = await SharedPreferences.getInstance();
+    String? backendUrl = prefs.getString('serviceUrl');
+    if (backendUrl == null || backendUrl == "") {
+      throw SettingException('Missing backendUrl');
+    }
+    var response = await http.post(Uri.http(backendUrl, '/api/forgottenpasswordcode'),
+        headers: {"Access-Control-Allow-Origin": "*"}, body: {'email': email});
+    if (response.statusCode == 200) {
+      var jsonResponse = convert.jsonDecode(response.body) as Map<String, dynamic>;
+      if (jsonResponse['status'] != true) {
+        throw MsgException(jsonResponse['message']);
+      }
+    } else {
+      throw ServiceException("Http error with status : ${response.statusCode}");
+    }
   }
 
   void dispose() => _controller.close();

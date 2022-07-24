@@ -13,14 +13,20 @@ class User(db.Model):
     activation_date = db.Column(db.DateTime())
     token = db.Column(db.String(42))
     token_date = db.Column(db.DateTime())
-    forgotten_password_token = db.Column(db.String(42))
+    forgotten_password_token = db.Column(db.String(300))
     forgotten_password_date = db.Column(db.DateTime())
-
+    
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def set_forgottenpasswordcode(self, forgotten_password_code):
+        self.forgotten_password_token = generate_password_hash(forgotten_password_code)
+
+    def check_forgottenpasswordcode(self, forgotten_password_code):
+        return check_password_hash(self.forgotten_password_token, forgotten_password_code)
 
     def get_json_data(self):
         return {

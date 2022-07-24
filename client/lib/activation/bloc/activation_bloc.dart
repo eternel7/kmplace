@@ -44,17 +44,13 @@ class ActivationBloc extends Bloc<ActivationEvent, ActivationState> {
         );
         emit(state.copyWith(status: FormzStatus.submissionSuccess));
       } on ActivationException catch (e) {
-        print("act");
         emit(state.copyWith(
             status: FormzStatus.submissionFailure, message: "$e", type: "activation"));
       } on SettingException catch (e) {
-        print("sett");
         emit(state.copyWith(status: FormzStatus.submissionFailure, message: "$e", type: "setting"));
       } on ServiceException catch (e) {
-        print("serv");
         emit(state.copyWith(status: FormzStatus.submissionFailure, message: "$e", type: "service"));
       } catch (_) {
-        print("unk");
         emit(state.copyWith(status: FormzStatus.submissionFailure));
       }
     }
