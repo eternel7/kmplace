@@ -15,8 +15,9 @@ class UserRepository {
       var jsonResponse = convert.jsonDecode(response) as Map<String, dynamic>;
       var u = jsonResponse['data']['user'];;
       _user = User(u['email'], u['email'],
-          (u['fullname'] is String) ? u['fullname'] : '-',
-          (u['username'] is String) ? u['username'] : '-',
+          (u['fullname'] is String) ? u['fullname'] : '',
+          (u['username'] is String) ? u['username'] : '',
+          (u['image'] is String) ? u['image'] : '',
           (u['login_counts'] is int) ? u['login_counts'] : -1);
     }
     return _user;
