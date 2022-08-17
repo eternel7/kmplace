@@ -145,6 +145,7 @@ class AppViewState extends State<AppView> {
           child: child,
         );
       },
+      initialRoute: '/',
       onGenerateRoute: (_) => SplashPage.route(),
     );
   }
