@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert' as convert;
+import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -58,19 +59,27 @@ class AuthenticationRepository {
     yield* _controller.stream;
   }
 
-  Future<void> logIn({
-    required String email,
-    required String password,
-  }) async {
+  Future<Response> serverCall({required Map body, required String route}) async {
     // Obtain shared preferences.
     final prefs = await SharedPreferences.getInstance();
     String? backendUrl = prefs.getString('serviceUrl');
     if (backendUrl == null || backendUrl == "") {
       throw SettingException('Missing backendUrl');
     }
-    var response = await http.post(Uri.http(backendUrl, '/api/login'),
-        headers: {"Access-Control-Allow-Origin": "*"},
-        body: {'email': email, 'password': password});
+    return await http
+        .post(Uri.http(backendUrl, route),
+            headers: {"Access-Control-Allow-Origin": "*"}, body: body)
+        .timeout(Duration(seconds: 5));
+  }
+
+  Future<void> logIn({
+    required String email,
+    required String password,
+  }) async {
+    // Obtain shared preferences.
+    final prefs = await SharedPreferences.getInstance();
+    var response =
+        await serverCall(body: {'email': email, 'password': password}, route: '/api/login');
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body) as Map<String, dynamic>;
       if (jsonResponse['status'] == true) {
@@ -102,13 +111,9 @@ class AuthenticationRepository {
   }) async {
     // Obtain shared preferences.
     final prefs = await SharedPreferences.getInstance();
-    String? backendUrl = prefs.getString('serviceUrl');
-    if (backendUrl == null || backendUrl == "") {
-      throw SettingException('Missing backendUrl');
-    }
-    var response = await http.post(Uri.http(backendUrl, '/api/activation'),
-        headers: {"Access-Control-Allow-Origin": "*"},
-        body: {'email': email, 'password': password, 'activation_code': activation_code});
+    var response = await serverCall(
+        body: {'email': email, 'password': password, 'activation_code': activation_code},
+        route: '/api/activation');
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body) as Map<String, dynamic>;
       if (jsonResponse['status'] == true) {
@@ -130,15 +135,9 @@ class AuthenticationRepository {
   }
 
   Future<void> activationSend({required String email, required String password}) async {
-    // Obtain shared preferences.
-    final prefs = await SharedPreferences.getInstance();
-    String? backendUrl = prefs.getString('serviceUrl');
-    if (backendUrl == null || backendUrl == "") {
-      throw SettingException('Missing backendUrl');
-    }
-    var response = await http.post(Uri.http(backendUrl, '/api/activationsend'),
-        headers: {"Access-Control-Allow-Origin": "*"},
-        body: {'email': email, 'password': password});
+    var response = await serverCall(
+        body: {'email': email, 'password': password},
+        route: '/api/activationsend');
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body) as Map<String, dynamic>;
       if (jsonResponse['status'] != true) {
@@ -164,15 +163,9 @@ class AuthenticationRepository {
     required String confirmPassword,
   }) async {
     if (password == confirmPassword) {
-      // Obtain shared preferences.
-      final prefs = await SharedPreferences.getInstance();
-      String? backendUrl = prefs.getString('serviceUrl');
-      if (backendUrl == null || backendUrl == "") {
-        throw new SettingException('Missing backendUrl');
-      }
-      var response = await http.post(Uri.http(backendUrl, '/api/register'),
-          headers: {"Access-Control-Allow-Origin": "*"},
-          body: {'email': email, 'password': password});
+      var response = await serverCall(
+          body: {'email': email, 'password': password},
+          route: '/api/register');
       if (response.statusCode == 200) {
         var jsonResponse = convert.jsonDecode(response.body) as Map<String, dynamic>;
         if (jsonResponse['status'] == true) {
@@ -195,15 +188,9 @@ class AuthenticationRepository {
     required String confirmPassword,
   }) async {
     if (password == confirmPassword) {
-      // Obtain shared preferences.
-      final prefs = await SharedPreferences.getInstance();
-      String? backendUrl = prefs.getString('serviceUrl');
-      if (backendUrl == null || backendUrl == "") {
-        throw new SettingException('Missing backendUrl');
-      }
-      var response = await http.post(Uri.http(backendUrl, '/api/forgottenpassword'),
-          headers: {"Access-Control-Allow-Origin": "*"},
-          body: {'email': email, 'password': password, 'code': code});
+      var response = await serverCall(
+          body: {'email': email, 'password': password, 'code': code},
+          route: '/api/forgottenpassword');
       if (response.statusCode == 200) {
         var jsonResponse = convert.jsonDecode(response.body) as Map<String, dynamic>;
         if (jsonResponse['status'] == true) {
@@ -220,14 +207,9 @@ class AuthenticationRepository {
   }
 
   Future<void> forgottenPasswordCodeSend({required String email}) async {
-    // Obtain shared preferences.
-    final prefs = await SharedPreferences.getInstance();
-    String? backendUrl = prefs.getString('serviceUrl');
-    if (backendUrl == null || backendUrl == "") {
-      throw SettingException('Missing backendUrl');
-    }
-    var response = await http.post(Uri.http(backendUrl, '/api/forgottenpasswordcode'),
-        headers: {"Access-Control-Allow-Origin": "*"}, body: {'email': email});
+    var response = await serverCall(
+        body: {'email': email},
+        route: '/api/forgottenpasswordcode');
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body) as Map<String, dynamic>;
       if (jsonResponse['status'] != true) {
