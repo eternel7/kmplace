@@ -72,12 +72,16 @@ class _UserNameInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = I10n.of(context);
-
-    return TextField(
-      key: const Key('accountForm_usernameInput_textField'),
-      controller: TextEditingController(text: label),
-      decoration: InputDecoration(filled: true, labelText: t.accountUsername),
-    );
+    return BlocBuilder<AccountBloc, AccountState>(
+        buildWhen: (previous, current) => previous.username != current.username,
+        builder: (context, state) {
+          return TextField(
+            key: const Key('accountForm_usernameInput_textField'),
+            controller: TextEditingController(text: label),
+            onChanged: (username) => context.read<AccountBloc>().add(AccountUsernameChanged(username)),
+            decoration: InputDecoration(filled: true, labelText: t.accountUsername),
+          );
+        });
   }
 }
 
@@ -89,11 +93,16 @@ class _FullnameInput extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = I10n.of(context);
 
-    return TextField(
-      key: const Key('accountForm_fullNameInput_textField'),
-      controller: TextEditingController(text: label),
-      decoration: InputDecoration(filled: true, labelText: t.accountFullname),
-    );
+    return BlocBuilder<AccountBloc, AccountState>(
+        buildWhen: (previous, current) => previous.fullname != current.fullname,
+        builder: (context, state) {
+          return TextField(
+            key: const Key('accountForm_fullNameInput_textField'),
+            controller: TextEditingController(text: label),
+            onChanged: (fullname) => context.read<AccountBloc>().add(AccountFullnameChanged(fullname)),
+            decoration: InputDecoration(filled: true, labelText: t.accountFullname),
+          );
+        });
   }
 }
 
@@ -105,11 +114,16 @@ class _ImageInput extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = I10n.of(context);
 
-    return TextField(
-      key: const Key('accountForm_imageInput_textField'),
-      controller: TextEditingController(text: label),
-      decoration: InputDecoration(filled: true, labelText: t.accountImage),
-    );
+    return BlocBuilder<AccountBloc, AccountState>(
+        buildWhen: (previous, current) => previous.image != current.image,
+        builder: (context, state) {
+          return TextField(
+            key: const Key('accountForm_imageInput_textField'),
+            controller: TextEditingController(text: label),
+            onChanged: (image) => context.read<AccountBloc>().add(AccountImageChanged(image)),
+            decoration: InputDecoration(filled: true, labelText: t.accountImage),
+          );
+        });
   }
 }
 

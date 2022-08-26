@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -53,6 +54,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           password: state.password.value,
         );
         emit(state.copyWith(status: FormzStatus.submissionSuccess));
+      } on TimeoutException catch (e) {
+        emit(state.copyWith(status: FormzStatus.submissionFailure, message : "$e", type :"msg"));
       } on ActivationException catch(e) {
         emit(state.copyWith(status: FormzStatus.submissionFailure, message : "$e", type :"activation"));
       }  on MsgException catch(e) {

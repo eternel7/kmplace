@@ -1,3 +1,3 @@
 export 'bloc/login_bloc.dart';
-export 'models/models.dart';
+export 'package:kmplace/models/models.dart';
 export 'view/view.dart';

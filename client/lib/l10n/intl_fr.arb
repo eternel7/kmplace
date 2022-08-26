@@ -3,6 +3,7 @@
 "slogan" : "Partager et retenir la connaissance",
 "loginTitle" : "Connexion",
 "authenticationFailure" : "Erreur d'authentification",
+"savedone" : "Enregistré",
 "email" : "courriel",
 "invalidEmail" : "courriel invalide",
 "password" : "mot de passe",

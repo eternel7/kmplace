@@ -39,6 +39,12 @@ class LoginForm extends StatelessWidget {
           } else if (state.type == "activation") {
             var info = convert.jsonDecode(state.message);
             Navigator.push(context, ActivationPage.route(info));
+          }  else if (state.type == "msg") {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(content: Text(state.message)),
+              );
           } else {
             ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()

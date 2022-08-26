@@ -3,6 +3,7 @@
 "slogan" : "Share and retain knowledge",
 "loginTitle" : "Login",
 "authenticationFailure" : "Authentication Failure",
+"savedone" : "Saved",
 "email" : "email",
 "invalidEmail" : "invalid email",
 "password" : "password",

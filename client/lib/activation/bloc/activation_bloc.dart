@@ -42,7 +42,7 @@ class ActivationBloc extends Bloc<ActivationEvent, ActivationState> {
           password: event.password,
           activation_code: state.activationCode.value,
         );
-        emit(state.copyWith(status: FormzStatus.submissionSuccess));
+        emit(state.copyWith(status: FormzStatus.submissionSuccess, type: "activation"));
       } on ActivationException catch (e) {
         emit(state.copyWith(
             status: FormzStatus.submissionFailure, message: "$e", type: "activation"));

@@ -43,6 +43,17 @@ class SettingsFormViewState extends State<SettingsFormView> {
     setState(() {
       _serviceUrl = val;
       controller.text = val;
+
+      final t = I10n.of(context);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(t.savedone),
+        duration: const Duration(seconds: 3),
+        action: SnackBarAction(
+          label: t.goLoginButton,
+          textColor: Colors.white,
+          onPressed: () => Navigator.push(context, LoginPage.route()),
+        ),
+      ));
     });
   }
 
