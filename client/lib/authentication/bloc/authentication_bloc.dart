@@ -84,8 +84,6 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     _userRepository.unsetUser();
     try {
       final user = await _tryGetUser();
-      print("updated user");
-      print(user);
       emit(user != null
           ? AuthenticationState.userUpdated(user)
           : const AuthenticationState.unauthenticated());

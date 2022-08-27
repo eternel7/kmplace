@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '/forgottenpassword/forgottenpassword.dart';
-import '/banner/banner.dart';
+import '/widgets/banner/banner.dart';
 
 class ForgottenPasswordPage extends StatelessWidget {
   const ForgottenPasswordPage({Key? key}) : super(key: key);

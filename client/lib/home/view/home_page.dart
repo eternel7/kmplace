@@ -34,6 +34,18 @@ class HomePage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 10.0),
                 child: Center(
+                  child: Text(user.username),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: Center(
+                  child: Text(user.fullname),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: Center(
                   child: Text(t.userLoginCount + user.login_counts.toString()),
                 ),
               ),

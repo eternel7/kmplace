@@ -33,6 +33,7 @@ class ActivationForm extends StatelessWidget {
                 SnackBar(
                     content: Text(
                   state.message,
+                  textAlign: TextAlign.center,
                   style: const TextStyle(
                     color: Colors.redAccent,
                   ),
@@ -46,6 +47,7 @@ class ActivationForm extends StatelessWidget {
               SnackBar(
                   content: Text(
                 t.activationCodeSendAgain,
+                textAlign: TextAlign.center,
                 style: const TextStyle(
                   color: Colors.green,
                 ),
@@ -142,7 +144,8 @@ class _ActivateButton extends StatelessWidget {
 }
 
 class _ActivateSendButton extends StatelessWidget {
-  const _ActivateSendButton({Key? key, required this.email, required this.password}) : super(key: key);
+  const _ActivateSendButton({Key? key, required this.email, required this.password})
+      : super(key: key);
   final String email;
   final String password;
 
