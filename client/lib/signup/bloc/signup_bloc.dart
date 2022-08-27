@@ -70,8 +70,10 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
           password: state.password.value,
           confirmPassword: state.confirmPassword.value,
         );
-        emit(state.copyWith(status: FormzStatus.submissionSuccess));
-      } catch (_) {
+        emit(state.copyWith(status: FormzStatus.submissionSuccess, message : ""));
+      } on ActivationException catch(e) {
+        emit(state.copyWith(status: FormzStatus.submissionSuccess, message : "$e", type : "activation"));
+      }  catch (_) {
         emit(state.copyWith(status: FormzStatus.submissionFailure));
       }
     }

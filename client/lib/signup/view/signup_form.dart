@@ -6,6 +6,8 @@ import '/signup/signup.dart';
 import '/login/login.dart';
 import 'package:formz/formz.dart';
 import 'package:kmplace/constants.dart';
+import 'dart:convert' as convert;
+import '/activation/view/activation_page.dart';
 
 class SignupForm extends StatelessWidget {
   const SignupForm({Key? key}) : super(key: key);
@@ -30,7 +32,10 @@ class SignupForm extends StatelessWidget {
 
     return BlocListener<SignupBloc, SignupState>(
       listener: (context, state) {
-        if (state.status.isSubmissionFailure) {
+        if (state.status == FormzStatus.submissionSuccess && state.type == "activation") {
+          var info = convert.jsonDecode(state.message);
+          Navigator.push(context, ActivationPage.route(info));
+      } else if (state.status.isSubmissionFailure) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(

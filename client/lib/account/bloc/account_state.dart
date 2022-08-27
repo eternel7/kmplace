@@ -3,6 +3,7 @@ part of 'account_bloc.dart';
 class AccountState extends Equatable {
   const AccountState({
     this.status = FormzStatus.valid,
+    this.user = User.empty,
     this.username = const SimpleString.pure(),
     this.fullname = const SimpleString.pure(),
     this.image = const SimpleString.pure(),
@@ -11,6 +12,7 @@ class AccountState extends Equatable {
   });
 
   final FormzStatus status;
+  final User user;
   final SimpleString username;
   final SimpleString fullname;
   final SimpleString image;
@@ -19,6 +21,7 @@ class AccountState extends Equatable {
 
   AccountState copyWith({
     FormzStatus? status,
+    User? user,
     SimpleString? username,
     SimpleString? fullname,
     SimpleString? image,
@@ -27,6 +30,7 @@ class AccountState extends Equatable {
   }) {
     return AccountState(
       status: status ?? this.status,
+      user: user ?? this.user,
       username: username ?? this.username,
       fullname: fullname ?? this.fullname,
       image: image ?? this.image,
@@ -36,5 +40,5 @@ class AccountState extends Equatable {
   }
 
   @override
-  List<Object> get props => [status, username, fullname, image, message, type];
+  List<Object> get props => [status, user, username, fullname, image, message, type];
 }

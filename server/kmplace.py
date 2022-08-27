@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_socketio import SocketIO
 from sentry_sdk.integrations.flask import FlaskIntegration
+from flask_login import LoginManager
 
 app = Flask(__name__,template_folder="templates")
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -33,9 +34,30 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
+#init login management
+login_manager = LoginManager()
+login_manager.init_app(app)
+
 # load routes
 import routes.rest
 import routes.sockets
 
 # load models
-import models.user
+from models.user import User
+
+@login_manager.user_loader
+def load_user(user_id):
+    print("load_user: " + user_id)
+    return User.objects(id=user_id).first()
+
+@login_manager.request_loader
+def load_user_from_request(request):
+    token, email = request.headers.get('Authorization').split("|:|:|")
+    if token and email:
+        token = token.replace('Bearer ', '', 1)
+        user = User.query.filter_by(email=email, token=token).first()
+        if user and user.is_authenticated():
+            return user
+
+    # return None if method did not login the user
+    return None

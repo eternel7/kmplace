@@ -97,7 +97,7 @@ class NavigationDrawer extends StatelessWidget {
               applicationName: 'KMPlace',
               applicationVersion: '1.0.0',
               applicationLegalese: '\u{a9} 2022 Unicorn',
-              aboutBoxChildren: [
+              aboutBoxChildren: const [
                 ///Content goes here...
               ],
               child: Text(t.aboutApp),

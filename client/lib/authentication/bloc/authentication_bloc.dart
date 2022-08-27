@@ -5,10 +5,10 @@ import 'package:equatable/equatable.dart';
 import 'package:user_repository/user_repository.dart';
 
 part 'authentication_event.dart';
+
 part 'authentication_state.dart';
 
-class AuthenticationBloc
-    extends Bloc<AuthenticationEvent, AuthenticationState> {
+class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
   AuthenticationBloc({
     required AuthenticationRepository authenticationRepository,
     required UserRepository userRepository,
@@ -17,6 +17,7 @@ class AuthenticationBloc
         super(const AuthenticationState.unknown()) {
     on<AuthenticationStatusChanged>(_onAuthenticationStatusChanged);
     on<AuthenticationLogoutRequested>(_onAuthenticationLogoutRequested);
+    on<AuthenticationUserChanged>(_onAuthenticationUserChanged);
     _authenticationStatusSubscription = _authenticationRepository.status.listen(
       (status) => add(AuthenticationStatusChanged(status)),
     );
@@ -24,8 +25,7 @@ class AuthenticationBloc
 
   final AuthenticationRepository _authenticationRepository;
   final UserRepository _userRepository;
-  late StreamSubscription<AuthenticationStatus>
-      _authenticationStatusSubscription;
+  late StreamSubscription<AuthenticationStatus> _authenticationStatusSubscription;
 
   @override
   Future<void> close() {
@@ -53,20 +53,44 @@ class AuthenticationBloc
     }
   }
 
-  void _onAuthenticationLogoutRequested(
-    AuthenticationLogoutRequested event,
-    Emitter<AuthenticationState> emit,
-  ) {
-    _authenticationRepository.logOut();
-    _userRepository.unsetUser();
-  }
-
   Future<User?> _tryGetUser() async {
     try {
       final user = await _userRepository.getUser();
       return user;
     } catch (_) {
       return null;
+    }
+  }
+
+  void _onAuthenticationLogoutRequested(
+    AuthenticationLogoutRequested event,
+    Emitter<AuthenticationState> emit,
+  ) async {
+    _userRepository.unsetUser();
+    try {
+      final user = await _tryGetUser();
+      if (user != null) {
+        _authenticationRepository.logOut(email: user.email);
+      }
+    } catch (_) {
+      return;
+    }
+  }
+
+  void _onAuthenticationUserChanged(
+    AuthenticationUserChanged event,
+    Emitter<AuthenticationState> emit,
+  ) async {
+    _userRepository.unsetUser();
+    try {
+      final user = await _tryGetUser();
+      print("updated user");
+      print(user);
+      emit(user != null
+          ? AuthenticationState.userUpdated(user)
+          : const AuthenticationState.unauthenticated());
+    } catch (_) {
+      return;
     }
   }
 }

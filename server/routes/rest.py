@@ -2,6 +2,7 @@ from flask import Flask, request, abort, jsonify, render_template
 from flask_mail import Mail, Message
 from kmplace import app, db
 from models.user import User
+from flask_login import login_required, login_user, current_user, logout_user
 import datetime
 import secrets
 
@@ -16,11 +17,6 @@ def home():
 @app.route('/debug-sentry' , methods=['GET'])
 def trigger_error():
     division_by_zero = 1 / 0
-
-
-@app.route('/user/<email>', methods=['GET'])
-def profile(email):
-    return f'{email}\'s profile'
 
 
 @app.route('/api/login', methods=['POST'])
@@ -43,7 +39,8 @@ def login():
         message = "Username or password incorrect"
         response = construct_response(status=status, message=message)
         return jsonify(response)
-    elif user.activate is False:
+    elif user.is_active is False:
+        login_user(user)
         status = False
         message = "Activation needed"
         data = {"user" : user.get_json_data()}
@@ -55,7 +52,8 @@ def login():
         user.token = secrets.token_urlsafe(16)
         user.token_date = datetime.datetime.now()
         db.session.commit()
-
+        
+        login_user(user)
         status = True
         message = "User logged in"
         data = {"token" : user.token,
@@ -111,6 +109,18 @@ def register():
     return jsonify(response)
 
 
+@app.route('/api/logout', methods=['POST'])
+@login_required
+def logout():
+    if current_user:
+        current_user.token = "-invalid-"+secrets.token_urlsafe(16)+"-invalid-"
+        current_user.token_date = datetime.datetime.now() - datetime.timedelta(days = 99)
+        db.session.commit()
+    logout_user()
+    response = construct_response(status=True, message="logged out")
+    return jsonify(response)
+
+
 @app.route('/api/activation', methods=['POST'])
 def activation():
 
@@ -135,7 +145,7 @@ def activation():
     elif user.activation_token == activationCode:
         user.token = secrets.token_urlsafe(16)
         user.token_date = datetime.datetime.now()
-        user.activate = True
+        user.is_active = True
         db.session.commit()
 
         status = True
@@ -150,6 +160,7 @@ def activation():
         data = {"user" : user.get_json_data()}
         response = construct_response(status=status, message=message, data=data)
         return jsonify(response)
+
 
 @app.route('/api/activationsend', methods=['POST'])
 def activationsend():
@@ -190,6 +201,7 @@ def activationsend():
         data = {"user" : user.get_json_data()}
         response = construct_response(status=status, message=message, data=data)
         return jsonify(response)
+
 
 @app.route('/api/forgottenpasswordcode', methods=['POST'])
 def forgottenpasswordcodesend():
@@ -261,8 +273,8 @@ def forgottenpassword():
     else:
         user.forgotten_password_token = ""
         user.set_password(password)
-        if not user.activate :
-            user.activate = True
+        if not user.is_active :
+            user.is_active = True
         db.session.commit()
             
         # Send update password email
@@ -277,6 +289,43 @@ def forgottenpassword():
         status = True
         message = "Your password was successfully updated"
         response = construct_response(status=status, message=message, data=user.get_json_data())
+        return jsonify(response)
+
+
+@app.route('/api/useradditionalinfoupdate', methods=['POST'])
+@login_required
+def useradditionalinfoupdate():
+
+    content = request.json
+
+    email = get_value_from_dict(content,"email")
+
+    if not validate_string(email):
+        status = False
+        message = "Invalid data"
+        response = construct_response(status=status, message=message)
+        return jsonify(response)
+
+    user = User.query.filter_by(email=email).first()
+    if user is None:
+        status = False
+        message = "Email incorrect"
+        response = construct_response(status=status, message=message)
+        return jsonify(response)
+    else:
+        username = get_value_from_dict(content,"username")
+        fullname = get_value_from_dict(content,"fullname")
+        image = get_value_from_dict(content,"image")
+        user.username = username
+        user.fullname = fullname
+        user.image = image
+        db.session.commit()
+        
+
+        status = True
+        message = "Update done"
+        data = {"user" : user.get_json_data()}
+        response = construct_response(status=status, message=message, data=data)
         return jsonify(response)
 
 

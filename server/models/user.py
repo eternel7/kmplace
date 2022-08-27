@@ -1,14 +1,16 @@
 from werkzeug.security import generate_password_hash, check_password_hash
+import datetime
 from kmplace import db
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), index=True, unique=True)
     username = db.Column(db.String(64), index=True, unique=False)
-    fullname = db.Column(db.String(100), index=True, unique=False)
+    fullname = db.Column(db.String(100))
+    image = db.Column(db.String(300))
     login_counts = db.Column(db.Integer,default=0)
     password_hash = db.Column(db.String(300))
-    activate = db.Column(db.Boolean,default=False)
+    is_active = db.Column(db.Boolean,default=False)
     activation_token = db.Column(db.String(42))
     activation_date = db.Column(db.DateTime())
     token = db.Column(db.String(42))
@@ -33,5 +35,15 @@ class User(db.Model):
             "email": self.email,
             "username": self.username,
             "fullname": self.fullname,
-            "login_counts" : self.login_counts,
+            "image": self.image,
+            "login_counts" : self.login_counts
         }
+     
+    def is_anonymous(self):
+        return False
+
+    def is_authenticated(self):
+        return self.token_date + datetime.timedelta(hours=8) > datetime.datetime.now()
+
+    def get_id(self):         
+        return str(self.id)

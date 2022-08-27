@@ -4,6 +4,8 @@
 "loginTitle" : "Login",
 "authenticationFailure" : "Authentication Failure",
 "savedone" : "Saved",
+"updateDone" : "Saved",
+"test" : "Test",
 "email" : "email",
 "invalidEmail" : "invalid email",
 "password" : "password",

@@ -4,6 +4,8 @@
 "loginTitle" : "Connexion",
 "authenticationFailure" : "Erreur d'authentification",
 "savedone" : "Enregistré",
+"updateDone" : "Enregistré",
+"test" : "Test",
 "email" : "courriel",
 "invalidEmail" : "courriel invalide",
 "password" : "mot de passe",
