@@ -65,5 +65,5 @@ def load_user_from_request(request):
     return None
 
 #init file upload
-app.config['UPLOAD_FOLDER'] = "D:/kmplace/uploads"
+app.config['UPLOAD_FOLDER'] = os.getenv("FLASK_UPLOAD_FOLDER", "D:/kmplace/uploads")
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1000 * 1000 #16 Mb
