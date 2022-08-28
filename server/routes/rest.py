@@ -1,9 +1,11 @@
-from flask import Flask, request, abort, jsonify, render_template
+from flask import request, jsonify, render_template, send_from_directory
+from werkzeug.utils import secure_filename
 from flask_mail import Mail, Message
 from kmplace import app, db
 from models.user import User
 from flask_login import login_required, login_user, current_user, logout_user
 import datetime
+import os
 import secrets
 
 sendermail = 'kmplace@unknow.app'
@@ -315,10 +317,8 @@ def useradditionalinfoupdate():
     else:
         username = get_value_from_dict(content,"username")
         fullname = get_value_from_dict(content,"fullname")
-        image = get_value_from_dict(content,"image")
         user.username = username
         user.fullname = fullname
-        user.image = image
         db.session.commit()
         
 
@@ -328,6 +328,47 @@ def useradditionalinfoupdate():
         response = construct_response(status=status, message=message, data=data)
         return jsonify(response)
 
+@app.route('/api/user_avatar/', methods = ['GET'])
+@login_required
+def get_avatar():
+    if current_user:
+        return send_from_directory(user_upload_path(current_user),current_user.image)
+    return "";
+
+@app.route('/api/new_user_avatar', methods = ['POST'])
+@login_required
+def upload_avatar():
+    if 'file' not in request.files:
+        status = False
+        message = "No file send"
+        response = construct_response(status=status, message=message)
+        return jsonify(response)
+    
+    if current_user:
+        f = request.files['file']
+        if f.filename == '':
+            status = False
+            message = "No file selected"
+            response = construct_response(status=status, message=message)
+            return jsonify(response)
+        if f and allowed_file(f.filename):
+            filename = secure_filename(f.filename)
+            uploads_dir = user_upload_path(current_user)
+            os.makedirs(uploads_dir, exist_ok=True)
+            f.save(os.path.join(uploads_dir, filename))
+            current_user.image = filename
+            db.session.commit()
+
+            status = True
+            message = "File uploaded"
+            data = {"user" : current_user.get_json_data()}
+            response = construct_response(status=status, message=message, data=data)
+            return jsonify(response)
+    
+    status = False
+    message = "Not correctly log in"
+    response = construct_response(status=status, message=message)
+    return jsonify(response)
 
 # Helpers
 def validate_string(input):
@@ -353,3 +394,12 @@ def construct_response(status, message, data=None):
         "message": message,
         "data": data
     }
+
+def allowed_file(filename):
+    ALLOWED_EXTENSIONS = {'svg', 'png', 'jpg', 'jpeg', 'gif'}
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def user_upload_path(current_user):
+    path = app.config['UPLOAD_FOLDER'] +'/'+ secure_filename(current_user.email)
+    return path

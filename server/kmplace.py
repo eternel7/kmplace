@@ -52,12 +52,18 @@ def load_user(user_id):
 
 @login_manager.request_loader
 def load_user_from_request(request):
-    token, email = request.headers.get('Authorization').split("|:|:|")
-    if token and email:
-        token = token.replace('Bearer ', '', 1)
-        user = User.query.filter_by(email=email, token=token).first()
-        if user and user.is_authenticated():
-            return user
+    authorization = request.headers.get('Authorization')
+    if authorization:
+        token, email = authorization.split("|:|:|")
+        if token and email:
+            token = token.replace('Bearer ', '', 1)
+            user = User.query.filter_by(email=email, token=token).first()
+            if user and user.is_authenticated():
+                return user
 
     # return None if method did not login the user
     return None
+
+#init file upload
+app.config['UPLOAD_FOLDER'] = "D:/kmplace/uploads"
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1000 * 1000 #16 Mb

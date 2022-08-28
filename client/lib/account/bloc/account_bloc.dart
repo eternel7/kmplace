@@ -65,15 +65,13 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       try {
         String username = state.username.value.isEmpty ? event.user.username : state.username.value;
         String fullname = state.fullname.value.isEmpty ? event.user.fullname : state.fullname.value;
-        String image = state.image.value.isEmpty ? event.user.image : state.image.value;
         await _authenticationRepository.updateUserAdditionalInfo(
           email: event.user.email,
           username: username,
-          fullname: fullname,
-          image: image,
+          fullname: fullname
         );
         User user = User(
-            event.user.id, event.user.email, username, fullname, image, event.user.login_counts);
+            event.user.id, event.user.email, username, fullname, event.user.image, event.user.login_counts);
         emit(state.copyWith(status: FormzStatus.submissionSuccess, user: user, type: "done"));
       } on SettingException catch (e) {
         emit(state.copyWith(status: FormzStatus.submissionFailure, message: "$e", type: "setting"));

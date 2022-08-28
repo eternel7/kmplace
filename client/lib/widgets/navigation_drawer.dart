@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '/widgets/profile_networkimage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '/authentication/authentication.dart';
 import '/home/home.dart';
 import '/account/account.dart';
@@ -36,10 +38,33 @@ class PageListTile extends StatelessWidget {
   }
 }
 
-class NavigationDrawer extends StatelessWidget {
+class NavigationDrawer extends StatefulWidget {
   const NavigationDrawer({Key? key, required this.selectedPageId}) : super(key: key);
 
   final String selectedPageId;
+
+  @override
+  State<NavigationDrawer> createState() => _NavigationDrawerState();
+}
+
+class _NavigationDrawerState extends State<NavigationDrawer> {
+  late SharedPreferences prefs;
+  String _serviceUrl = "";
+  String token = "";
+
+  void loadServiceURL() async {
+    prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _serviceUrl = (prefs.getString('serviceUrl') ?? "");
+      token = (prefs.getString('token') ?? "");
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadServiceURL();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,18 +80,17 @@ class NavigationDrawer extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: [
             UserAccountsDrawerHeader(
-              accountName: Text("${user.fullname} ${user.username}"),
+              accountName: Text(user.fullname.isEmpty ? user.username : user.fullname),
               accountEmail: Text(user.email),
-              currentAccountPicture: user.image.isEmpty
+              currentAccountPicture: (user.image.isEmpty || _serviceUrl.isEmpty || token.isEmpty)
                   ? CircleAvatar(
                       minRadius: 50, child: Text(user.email.substring(0, 2).toUpperCase()))
                   : CircleAvatar(
                       minRadius: 50,
-                      backgroundImage: NetworkImage(user.image),
-                    ),
+                      backgroundImage: profileNetworkImage(_serviceUrl, token, user.email)),
             ),
             PageListTile(
-                selectedPageId: selectedPageId,
+                selectedPageId: widget.selectedPageId,
                 pageId: "",
                 pageLabel: 'Home',
                 pageIcon: const Icon(Icons.home),
@@ -75,7 +99,7 @@ class NavigationDrawer extends StatelessWidget {
                 }),
             const Divider(),
             PageListTile(
-                selectedPageId: selectedPageId,
+                selectedPageId: widget.selectedPageId,
                 pageId: "account",
                 pageLabel: t.account,
                 pageIcon: const Icon(Icons.account_box),

@@ -244,10 +244,9 @@ class AuthenticationRepository {
 
   Future<void> updateUserAdditionalInfo({required String email,
     required String username,
-    required String fullname,
-    required String image}) async {
+    required String fullname}) async {
     var response = await serverAuthenticatedPost(email: email,
-        body: {'email': email, 'username': username, 'fullname': fullname, 'image': image},
+        body: {'email': email, 'username': username, 'fullname': fullname},
         route: '/api/useradditionalinfoupdate');
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body) as Map<String, dynamic>;
