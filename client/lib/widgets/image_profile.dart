@@ -2,10 +2,11 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:user_repository/user_repository.dart';
-import 'package:http/http.dart' as http;
 import '/widgets/profile_networkimage.dart';
 
 class SettingException implements Exception {
@@ -120,7 +121,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
               backgroundImage: _imageFile == null
                   ? profileNetworkImage(_serviceUrl, token, widget.user.email)
                   : kIsWeb
-                      ? Image.memory(webImage) as ImageProvider
+                      ? Image.memory(webImage).image
                       : FileImage(File(_imageFile!.path)),
             ),
       Positioned(
@@ -138,10 +139,14 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       child: editable && !sending
           ? InkWell(
               onTap: () {
-                showModalBottomSheet(
-                  context: context,
-                  builder: ((builder) => bottomSheet()),
-                );
+                if (!kIsWeb) {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: ((builder) => bottomSheet()),
+                  );
+                } else {
+                  takePhoto(ImageSource.gallery);
+                }
               },
               child: content)
           : content,
@@ -190,7 +195,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     );
   }
 
-  Future<bool> asyncFileUpload(String whatFor, File file) async {
+  Future<bool> asyncFileUpload(String whatFor, XFile file, Uint8List? bytesFile) async {
     // Obtain shared preferences.
     final prefs = await SharedPreferences.getInstance();
     String? backendUrl = prefs.getString('serviceUrl');
@@ -199,7 +204,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     }
     String? token = prefs.getString('token');
     //create multipart request for POST or PATCH method
-    var request = http.MultipartRequest("POST", Uri.parse("http://$backendUrl/api/new_user_avatar"));
+    var request = MultipartRequest("POST", Uri.parse("http://$backendUrl/api/new_user_avatar"));
     request.headers.addAll({
       "Access-Control-Allow-Origin": "*",
       "Content-Type": "application/json; charset=UTF-8",
@@ -207,13 +212,18 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       "Authorization": "Bearer $token|:|:|${widget.user.email}"
     });
     //add an information as text field
-    request.fields["whatFor"] = whatFor;
+    request.fields["filename"] = file.name;
     //create multipart using filepath, string or bytes
-    var pic = await http.MultipartFile.fromPath("file", file.path);
+    late MultipartFile pic;
+    if (kIsWeb) {
+      pic = MultipartFile.fromBytes("file", List<int>.from(bytesFile!),
+          contentType: MediaType('application', 'octet-stream'), filename: file.name);
+    } else {
+      pic = await MultipartFile.fromPath("file", file.path);
+    }
     //add multipart to request
     request.files.add(pic);
     var response = await request.send();
-
     //Get the response from the server
     var responseData = await response.stream.toBytes();
     var responseString = String.fromCharCodes(responseData);
@@ -221,11 +231,11 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     return true;
   }
 
-  Future<void> sendImageToServer(XFile pickedFile) async {
+  Future<void> sendImageToServer(XFile pickedFile, Uint8List? bytesFile) async {
     setState(() {
       sending = true;
     });
-    await asyncFileUpload("new avatar", File(pickedFile.path));
+    await asyncFileUpload("new avatar", pickedFile, bytesFile);
     setState(() {
       sending = false;
     });
@@ -235,19 +245,20 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     final XFile? pickedFile = await _picker.pickImage(
       source: source,
     );
+    Uint8List? bytesFile;
     if (pickedFile != null) {
       if (!kIsWeb) {
         setState(() {
           _imageFile = pickedFile;
         });
       } else {
-        var f = await pickedFile.readAsBytes();
+        bytesFile = await pickedFile.readAsBytes();
         setState(() {
-          webImage = f;
+          webImage = bytesFile!;
           _imageFile = XFile('forUpdate');
         });
       }
-      sendImageToServer(pickedFile);
+      sendImageToServer(pickedFile, bytesFile);
     }
   }
 }

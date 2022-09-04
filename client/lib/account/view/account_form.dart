@@ -1,3 +1,4 @@
+import 'dart:convert' as convert;
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -83,9 +84,25 @@ class _AccountFormState extends State<AccountForm> {
                 user: widget.user,
                 isEdit: true,
                 onUpdate: (response) {
-                  // Update user
-                  _prefs.setString('login_response', response);
-                  context.read<AuthenticationBloc>().add(AuthenticationUserChanged());
+                  var jsonResponse = convert.jsonDecode(response) as Map<String, dynamic>;
+                  if (jsonResponse['status'] == true) {
+                    // Update user
+                    _prefs.setString('login_response', response);
+                    context.read<AuthenticationBloc>().add(AuthenticationUserChanged());
+                  } else {
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        SnackBar(
+                            content: Text(
+                          jsonResponse['message'],
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: Colors.redAccent,
+                          ),
+                        )),
+                      );
+                  }
                 }),
             const Padding(padding: EdgeInsets.all(12)),
             Text(
